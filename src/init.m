@@ -4,7 +4,7 @@ function init(prestring)
     end
 
     GSPBOX_PATH = append(prestring, "../gspbox/");
-    DATA_PATH   = append(prestring, "../tv-graph-datasets/");
+    DATA_PATH   = append(prestring, "../data/tv-graph-datasets/");
     GFT_PATH    = append(prestring, "./gft/");
 
     addpath(DATA_PATH, GSPBOX_PATH, '-frozen');

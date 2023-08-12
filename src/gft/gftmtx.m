@@ -1,20 +1,20 @@
-function [gftmtx, igftmtx, eigVals] = gftmtx(shiftMatrix, sortMethod,...
-                                             decompMethod, roundDigit)
-    arguments
-        shiftMatrix (:,:) {mustBeNumeric, mustBeSquareMatrix}
-        sortMethod (1,:) char {mustBeMember(sortMethod,...
-                                {'tv','ascend','ascend02pi'})} = 'tv'
-        decompMethod (1,:) char {mustBeMember(decompMethod,...
-                                    {'eig','jordan'})} = 'eig'
-        roundDigit (1,1) double {mustBeInteger} = int32(abs(log10(eps)))
-    end
+function [gftmtx, igftmtx, eigVals] = gftmtx(shiftMatrix, sortMethod, ...
+    decompMethod, roundDigit)
+arguments
+    shiftMatrix(:, :) {mustBeNumeric, mustBeSquareMatrix}
+    sortMethod(1, :) char{mustBeMember(sortMethod, ...
+        {'tv', 'ascend', 'ascend02pi'})} = 'tv'
+    decompMethod(1, :) char{mustBeMember(decompMethod, ...
+        {'eig', 'jordan'})} = 'eig'
+    roundDigit(1, 1) double{mustBeInteger} = int32(abs(log10(eps)))
+end
 
 switch sortMethod
     case "tv"
         [V, D] = tvdecomposition(shiftMatrix, decompMethod);
     case {"ascend", "ascend02pi"}
-        [V, D] = ascendingdecomposition(shiftMatrix, sortMethod,...
-                                        decompMethod, roundDigit);
+        [V, D] = ascendingdecomposition(shiftMatrix, sortMethod, ...
+            decompMethod, roundDigit);
     otherwise
         error("`sortMethod` can be either `tv` | `ascend` | `ascend02pi`");
 end
@@ -57,7 +57,7 @@ D = D(sort_idx, sort_idx);
 end
 
 function [V, D] = ascendingdecomposition(Z, sortMethod, ...
-                                            decompMethod, roundDigit)
+    decompMethod, roundDigit)
 [V, D] = spectraldecomposition(Z, decompMethod);
 
 if strcmp(sortMethod, "ascend")
@@ -75,6 +75,6 @@ function mustBeSquareMatrix(A)
 if ~ismatrix(A) || size(A, 1) ~= size(A, 2)
     eid = 'Size:notSquare';
     msg = 'Matrix must be square.';
-    throwAsCaller(MException(eid,msg))
+    throwAsCaller(MException(eid, msg))
 end
 end

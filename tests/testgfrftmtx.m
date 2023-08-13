@@ -1,9 +1,6 @@
 %% Clear
 clc, clear, close all;
 
-%% Initialize paths and GSPBox
-init();
-
 %% Graph Generation
 N = 4;
 A = diag(ones(N-1, 1), -1);

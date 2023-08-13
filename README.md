@@ -1,6 +1,17 @@
 # Graph Fractional Fourier Transform: A Unified Theory - Experiments
 
+![MATLAB](https://img.shields.io/badge/MATLAB-2023a-orange.svg)
+[![License](https://img.shields.io/github/license/koc-lab/gfrft-unified)](https://github.com/koc-lab/gfrft-unified/blob/main/LICENSE)
+
 According to the feedback of the reviewers, the _Graph Fractional Fourier Transform: A Unified Theory_ paper needed updates for the experiments. This repository contains the source code and will serve as documentation for the updated experiments.
+
+## Table of Contents
+
+- [Graph Fractional Fourier Transform: A Unified Theory - Experiments](#graph-fractional-fourier-transform-a-unified-theory---experiments)
+  - [Table of Contents](#table-of-contents)
+  - [Dependencies](#dependencies)
+  - [Installation](#installation)
+  - [Usage](#usage)
 
 ## Dependencies
 
@@ -37,3 +48,11 @@ According to the feedback of the reviewers, the _Graph Fractional Fourier Transf
     ```matlab
     cvx_setup
     ```
+
+## Usage
+
+First, run the [`initializegfrftunified.m`](./initializegfrftunified.m) script to resolve paths of the all files and import them for utilization.
+
+```matlab
+>>> initializegfrftunified
+```

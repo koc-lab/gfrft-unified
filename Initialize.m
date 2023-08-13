@@ -1,4 +1,4 @@
-%(c) Copyright 2023 Tuna Alikaşifoğlu
+% (c) Copyright 2023 Tuna Alikaşifoğlu
 
 %% Clear
 clc;

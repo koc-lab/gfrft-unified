@@ -1,3 +1,5 @@
+%(c) Copyright 2023 Tuna Alikaşifoğlu
+
 %% Clear
 clc, clear, close all;
 

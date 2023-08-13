@@ -1,3 +1,5 @@
+% (c) Copyright 2023 Tuna Alikaşifoğlu
+
 function [G, x] = geterdosgraph(N, p)
 rng('default');
 connectionMaxIter = 10;

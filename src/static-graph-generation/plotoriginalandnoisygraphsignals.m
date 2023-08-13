@@ -1,3 +1,5 @@
+% (c) Copyright 2023 Tuna Alikaşifoğlu
+
 function plotoriginalandnoisygraphsignals(G, original, noisy)
 paramplot.vertex_size = 70;
 paramplot.show_edges = 1;

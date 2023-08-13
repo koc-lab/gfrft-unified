@@ -1,3 +1,5 @@
+% (c) Copyright 2023 Tuna Alikaşifoğlu
+
 function [gfrftMatrix, igfrftMatrix] = gfrftmtx(gftMatrix, a)
 arguments
     gftMatrix(:, :) {mustBeNumeric, mustBeSquareMatrix}

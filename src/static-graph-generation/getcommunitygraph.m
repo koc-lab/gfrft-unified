@@ -1,3 +1,5 @@
+% (c) Copyright 2023 Tuna Alikaşifoğlu
+
 function [G, x] = getcommunitygraph(N)
 rng('default');
 communityNumber = round(sqrt(N)/2);

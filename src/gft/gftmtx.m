@@ -1,3 +1,5 @@
+% (c) Copyright 2023 Tuna Alikaşifoğlu
+
 function [gftmtx, igftmtx, eigVals] = gftmtx(shiftMatrix, sortMethod, ...
     decompMethod, roundDigit)
 arguments

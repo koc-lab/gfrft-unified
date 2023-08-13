@@ -34,11 +34,7 @@ function [V, D] = spectraldecomposition(Z, decompMethod)
 if strcmp(decompMethod, "jordan")
     [V, D] = jordan(Z);
 elseif strcmp(decompMethod, "eig")
-    if ishermitian(Z)
-        [V, D] = eigh(Z);
-    else
-        [V, D] = eig(Z);
-    end
+    [V, D] = eig(Z);
 else
     error("`decompMethod` can be either `jordan` | `eig`");
 end

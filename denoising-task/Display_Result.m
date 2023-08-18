@@ -21,7 +21,7 @@ for i = 1:length(sigmas)
     hold on;
     legends{i} = sprintf("$\\sigma$ = %.2f", sigmas(i));
 end
-title("PM 2.5")
+title("PM 2.5");
 grid on;
 legend(legends, 'Interpreter', 'latex');
 xlabel("Fractional Order $a$", 'Interpreter', 'latex');

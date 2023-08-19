@@ -17,8 +17,8 @@ sigmas = results.sigmas;
 figure;
 legends = cell(length(sigmas), 1);
 for i = 1:length(sigmas)
-    disp(i);
-    err = estimation_error(:, i, 8);
+    [~, min_zero_count_idx] = Matrix_Idx(squeeze(estimation_error(:, i, :)), 'min');
+    err = estimation_error(:, i, min_zero_count_idx);
     plot(fractional_orders, err, 'LineWidth', 2);
     hold on;
     legends{i} = sprintf("$\\sigma$ = %.2f, noise error = %.2f", ...

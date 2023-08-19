@@ -7,6 +7,7 @@ close all;
 
 %% Graph Generation
 dataset = "../data/tv-graph-datasets/pm25-concentration.mat";
+dataset_title = "PM-2.5";
 knn_count = 5;
 knn_sigma  = 1;
 max_node_count = 100;
@@ -14,18 +15,30 @@ max_time_instance = 100;
 verbose = false;
 [graph, signals] = Init_Real(dataset, knn_count, knn_sigma, ...
                              max_node_count, max_time_instance, verbose);
-shift_mtx = full(graph.W);
+
+shift_mtx_strategy = 'adjacency';
+% shift_mtx_strategy = 'laplacian';
+
+if strcmp(shift_mtx_strategy, 'laplacian')
+    disp("Using Laplacian matrix and ascending ordered graph frequency.")
+    shift_mtx = eye(size(graph.W)) - full(graph.W);
+    [gft_mtx, igft_mtx, graph_freqs] = GFT_Mtx(shift_mtx, 'ascend');
+else
+    disp("Using weighted adjacency matrix and TV ordered graph frequency.")
+    shift_mtx = full(graph.W);
+    [gft_mtx, igft_mtx, graph_freqs] = GFT_Mtx(shift_mtx, 'tv');
+end
 
 %% Experiment
 sigmas = [0.5, 1.0, 1.5, 2.0];
 fractional_orders = 0.0:0.05:2;
 zero_counts = 1:10;
 
-[gft_mtx, igft_mtx, graph_freqs] = GFT_Mtx(shift_mtx, 'tv');
 [estimation_error, noise_error] = Experiment(signals, gft_mtx, ...
                                              fractional_orders, sigmas, zero_counts);
 
 results = struct();
+results.dataset_title = dataset_title;
 results.graph = graph;
 results.knn_count = knn_count;
 results.knn_sigma = knn_sigma;

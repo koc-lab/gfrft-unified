@@ -7,6 +7,7 @@ close all;
 
 %% Import Results
 results = load("results.mat");
+dataset_title = results.dataset_title;
 noise_error = results.noise_error;
 estimation_error = results.estimation_error;
 fractional_orders = results.fractional_orders;

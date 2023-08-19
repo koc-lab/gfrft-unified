@@ -22,8 +22,8 @@ fractional_orders = 0.0:0.05:2;
 zero_counts = 1:10;
 
 [gft_mtx, igft_mtx, graph_freqs] = GFT_Mtx(shift_mtx, 'tv');
-[estimation_error, noise_err] = Experiment(signals, gft_mtx, ...
-                                           fractional_orders, sigmas, zero_counts);
+[estimation_error, noise_error] = Experiment(signals, gft_mtx, ...
+                                             fractional_orders, sigmas, zero_counts);
 
 results = struct();
 results.graph = graph;
@@ -35,13 +35,13 @@ results.fractional_orders = fractional_orders;
 results.sigmas = sigmas;
 results.zero_counts = zero_counts;
 results.estimation_error = estimation_error;
-results.noise_err = noise_err;
+results.noise_error = noise_error;
 
 save(sprintf("results.mat"), "-struct", "results");
 
 %% Functions
-function [estimation_error, noise_err] = Experiment(signals, gft_mtx, ...
-                                                    fractional_orders, sigmas, zero_counts)
+function [estimation_error, noise_error] = Experiment(signals, gft_mtx, ...
+                                                      fractional_orders, sigmas, zero_counts)
     arguments
         signals(:, :) double
         gft_mtx(:, :) double {Must_Be_Square_Matrix}
@@ -51,11 +51,11 @@ function [estimation_error, noise_err] = Experiment(signals, gft_mtx, ...
     end
 
     estimation_error = zeros(length(fractional_orders), length(sigmas), length(zero_counts));
-    noise_err = zeros(length(sigmas), 1);
+    noise_error = zeros(length(sigmas), 1);
     noisy_signals_cell = cell(1, length(sigmas));
     for i = 1:length(sigmas)
         noisy_signals_cell{i} = Add_Noise(signals, sigmas(i));
-        noise_err(i) = Get_MSE_Percent(signals, noisy_signals_cell{i});
+        noise_error(i) = Get_MSE_Percent(signals, noisy_signals_cell{i});
     end
 
     for i_frac = 1:length(fractional_orders)

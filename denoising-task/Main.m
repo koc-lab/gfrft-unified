@@ -20,11 +20,11 @@ shift_mtx_strategy = 'adjacency';
 % shift_mtx_strategy = 'laplacian';
 
 if strcmp(shift_mtx_strategy, 'laplacian')
-    disp("Using Laplacian matrix and ascending ordered graph frequency.")
+    disp("Using Laplacian matrix and ascending ordered graph frequency.");
     shift_mtx = eye(size(graph.W)) - full(graph.W);
     [gft_mtx, igft_mtx, graph_freqs] = GFT_Mtx(shift_mtx, 'ascend');
 else
-    disp("Using weighted adjacency matrix and TV ordered graph frequency.")
+    disp("Using weighted adjacency matrix and TV ordered graph frequency.");
     shift_mtx = full(graph.W);
     [gft_mtx, igft_mtx, graph_freqs] = GFT_Mtx(shift_mtx, 'tv');
 end

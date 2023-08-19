@@ -9,7 +9,7 @@ close all;
 dataset = "../data/tv-graph-datasets/pm25-concentration.mat";
 dataset_title = "PM-2.5";
 knn_count = 5;
-knn_sigma  = 1;
+knn_sigma = 1;
 max_node_count = 100;
 max_time_instance = 100;
 verbose = false;
@@ -30,9 +30,9 @@ else
 end
 
 %% Experiment
-sigmas = [0.5, 1.0, 1.5, 2.0];
-fractional_orders = 0.0:0.05:2;
-zero_counts = 1:10;
+sigmas = [0.05, 0.10];
+fractional_orders = 0.5:0.05:1.5;
+zero_counts = 1:size(signals, 1) - 1;
 
 [estimation_error, noise_error] = Experiment(signals, gft_mtx, ...
                                              fractional_orders, sigmas, zero_counts);

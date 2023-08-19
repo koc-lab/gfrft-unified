@@ -14,7 +14,3 @@ function [graph, x] = Get_Community_Graph(node_count)
 
     x = Normalize_Plus_Minus_One(x);
 end
-
-function y = Normalize_Plus_Minus_One(x)
-    y = 2 * (x - min(x)) / (max(x) - min(x)) - 1;
-end

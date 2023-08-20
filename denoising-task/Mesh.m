@@ -34,7 +34,7 @@ for i_snr = 1:length(snr_dbs)
     ylabel("Fractional Order $a$", 'Interpreter', 'latex');
 
     labels  = ["c", "\alpha", "SNR"];
-    formats = ["auto", "auto", "percentage"];
+    formats = ["auto", "auto", "auto"];
     plt = {s, max_point};
 
     for j = 1:length(plt)

@@ -15,7 +15,7 @@ function [varargout] = Matrix_Idx(matrix, ordering)
     if nargout == 1
         dimension_count = ndims(matrix);
         [idx{1:dimension_count}] = ind2sub(size(matrix), I);
-        varargout{1} = idx;
+        varargout = idx;
     else
         [varargout{1:nargout}] = ind2sub(size(matrix), I);
     end

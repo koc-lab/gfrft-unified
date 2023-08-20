@@ -9,6 +9,7 @@ close all;
 dataset = "../data/tv-graph-datasets/pm25-concentration.mat";
 dataset_title = "PM-2.5";
 knn_count = 2;
+rng(0);
 knn_sigma = 1;
 max_node_count = 100;
 max_time_instance = 100;

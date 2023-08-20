@@ -35,7 +35,6 @@ function [estimation_snr, noisy_snr] = Experiment(signals, gft_mtx, ...
 end
 
 function noisy = Add_Noise(signal, snr_db)
-    rng('default');
     noise = randn(size(signal)) .* std(signal) / db2mag(snr_db);
     noisy = signal + noise;
 end

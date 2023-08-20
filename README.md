@@ -61,3 +61,6 @@ First, run the [`Initialize.m`](./Initialize.m) script to resolve paths of the a
 Successfully initialized GFRFT Unified Project by Tuna Alikaşifoğlu.
 ```
 
+## ⚠️ Warnings
+
+- The [`gspbox`](https://github.com/epfl-lts2/gspbox)'s [`unlockbox`](https://github.com/epfl-lts2/unlocbox) addition overrides [`snr.m`](https://github.com/epfl-lts2/unlocbox/blob/df22b021536c0f4e0411cd07c23fa916bd9dbb6d/utils/snr.m#L1-L29) of signal toolbox. For an original signal `x` and same size noise `n`, the original SNR is calculated with `snr(x, n)`, with the [`unlockbox`](https://github.com/epfl-lts2/unlocbox) addition, it is calculated with `snr(x, x + n)`.

@@ -7,35 +7,35 @@ clear;
 
 %% Import Results
 results = load("results.mat");
-noise_error = results.noise_error;
-estimation_error = results.estimation_error;
+estimation_snr = results.estimation_snr;
+noisy_snr = results.noisy_snr;
 fractional_orders = results.fractional_orders;
 zero_counts = results.zero_counts;
-sigmas = results.sigmas;
+snr_dbs = results.snr_dbs;
 
 %% Figure
-for i_sigma = 1:length(sigmas)
+for i_snr = 1:length(snr_dbs)
     figure;
     [X, Y] = meshgrid(zero_counts, fractional_orders);
-    err = squeeze(estimation_error(:, i_sigma, :));
-    [min_row, min_col] = Matrix_Idx(err, 'min');
+    curr_snr = squeeze(estimation_snr(:, i_snr, :));
+    [max_row, max_col] = Matrix_Idx(curr_snr, 'max');
 
-    s = surf(X, Y, err);
+    s = surf(X, Y, curr_snr);
     hold on;
-    min_point = plot3(X(min_row, min_col), ...
-                      Y(min_row, min_col), ...
-                      err(min_row, min_col), ...
+    max_point = plot3(X(max_row, max_col), ...
+                      Y(max_row, max_col), ...
+                      curr_snr(max_row, max_col), ...
                       '.r', 'MarkerSize', 30);
-    datatip(min_point, 'Location', 'southeast');
+    datatip(max_point, 'Location', 'southeast');
 
-    title(sprintf("PM 2.5, Noise Error: %.2f", noise_error(i_sigma)));
+    title(sprintf("PM 2.5, Noisy SNR: %.2f", noisy_snr(i_snr)));
     grid on;
     xlabel("Zero Count", 'Interpreter', 'latex');
     ylabel("Fractional Order $a$", 'Interpreter', 'latex');
 
-    labels  = ["c", "\alpha", "MSE"];
+    labels  = ["c", "\alpha", "SNR"];
     formats = ["auto", "auto", "percentage"];
-    plt = {s, min_point};
+    plt = {s, max_point};
 
     for j = 1:length(plt)
         for i = 1:length(plt{j}.DataTipTemplate.DataTipRows)

@@ -8,24 +8,25 @@ close all;
 %% Import Results
 results = load("results.mat");
 dataset_title = results.dataset_title;
-noise_error = results.noise_error;
-estimation_error = results.estimation_error;
+noisy_snr = results.noisy_snr;
+estimation_snr = results.estimation_snr;
 fractional_orders = results.fractional_orders;
-sigmas = results.sigmas;
+snr_dbs = results.snr_dbs;
 
 %% Figure
 figure;
-legends = cell(length(sigmas), 1);
-for i = 1:length(sigmas)
-    [~, min_zero_count_idx] = Matrix_Idx(squeeze(estimation_error(:, i, :)), 'min');
-    err = estimation_error(:, i, min_zero_count_idx);
-    plot(fractional_orders, err, 'LineWidth', 2);
+legends = cell(2 * length(snr_dbs), 1);
+for i = 1:length(snr_dbs)
+    [~, max_zero_count_idx] = Matrix_Idx(squeeze(estimation_snr(:, i, :)), 'max');
+    curr_snr = estimation_snr(:, i, max_zero_count_idx);
+    plot(fractional_orders, curr_snr, 'LineWidth', 2);
     hold on;
-    legends{i} = sprintf("$\\sigma$ = %.2f, noise error = %.2f", ...
-                         sigmas(i), noise_error(i));
+    legends{2 * i - 1} = sprintf("Estimation for SNR = %.2f", noisy_snr(i));
+    yline(noisy_snr(i));
+    legends{2 * i} = sprintf("Noisy SNR = %.2f", noisy_snr(i));
 end
-title(sprintf("%s, Noise Error: %.2f", dataset_title, noise_error));
+title(sprintf("%s", dataset_title));
 grid on;
 legend(legends, 'Interpreter', 'latex');
 xlabel("Fractional Order $a$", 'Interpreter', 'latex');
-ylabel("MSE ($\%$)", 'Interpreter', 'latex');
+ylabel("SNR (dB)", 'Interpreter', 'latex');

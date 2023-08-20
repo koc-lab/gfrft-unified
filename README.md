@@ -51,8 +51,13 @@ According to the feedback of the reviewers, the _Graph Fractional Fourier Transf
 
 ## Usage
 
-First, run the [`initializegfrftunified.m`](./initializegfrftunified.m) script to resolve paths of the all files and import them for utilization.
+First, run the [`Initialize.m`](./Initialize.m) script to resolve paths of the all files and import them for utilization.
 
 ```matlab
->>> initializegfrftunified
+>>> Initialize
 ```
+
+```stdout
+Successfully initialized GFRFT Unified Project by Tuna Alikaşifoğlu.
+```
+

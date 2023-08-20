@@ -53,4 +53,3 @@ results.estimation_snr = estimation_snr;
 results.noisy_snr = noisy_snr;
 
 save(sprintf("results.mat"), "-struct", "results");
-

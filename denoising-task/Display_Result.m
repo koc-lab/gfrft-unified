@@ -22,7 +22,7 @@ for i = 1:length(snr_dbs)
     max_idx = Matrix_Idx(curr_snr, 'max');
 
     ax = plot(fractional_orders, curr_snr, 'LineWidth', 2, ...
-            'DisplayName',sprintf("Estimation for SNR = %.2f", noisy_snr(i))); 
+              'DisplayName', sprintf("Estimation for SNR = %.2f", noisy_snr(i)));
     axs(end + 1) = ax;
     hold on;
     yline(noisy_snr(i));

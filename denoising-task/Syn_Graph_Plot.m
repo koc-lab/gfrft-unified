@@ -36,7 +36,6 @@ title(sprintf("Filtered, SNR = %.2fdB", Snr(x, x_filtered)));
 gsp_plot_signal(graph, x_filtered, param);
 pbaspect([val 1 1]);
 
-
 %% Functions
 function filtered_signals = Filter_With_Best(results, noisy_signals)
     [order_idx, zero_idx] = Matrix_Idx(squeeze(results.estimation_snr(:, 2, :)), 'max');

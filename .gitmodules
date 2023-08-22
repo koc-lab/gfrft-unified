@@ -7,3 +7,6 @@
 [submodule "unlocbox"]
 	path = unlocbox
 	url = https://github.com/epfl-lts2/unlocbox
+[submodule "export_fig"]
+	path = export_fig
+	url = https://github.com/altmany/export_fig

@@ -7,6 +7,7 @@ close all;
 
 %% Import Functions to Path
 addpath('gspbox');
+addpath('export_fig');
 addpath(genpath('src'));
 addpath(genpath('data'));
 gsp_start;

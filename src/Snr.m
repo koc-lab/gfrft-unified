@@ -5,6 +5,5 @@ function snr_db = Snr(signal, noisy_signal)
         signal double {mustBeNumeric}
         noisy_signal double {Must_Be_Equal_Size(signal, noisy_signal)}
     end
-    snr_ratio = var(signal(:)) / var(signal(:) - noisy_signal(:));
-    snr_db = 10 * log10(snr_ratio);
+    snr_db = mag2db(rssq(signal(:)) / rssq(signal(:) - noisy_signal(:)));
 end

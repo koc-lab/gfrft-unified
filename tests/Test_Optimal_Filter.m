@@ -6,9 +6,10 @@ clear;
 close all;
 
 %% Parameters
+use_gpu = true;
 rng(0);
 len = 100;
-noise_sigma = 0.1;
+noise_sigma = 0.5;
 threshold = 0.8;
 fractional_orders = 0:0.1:2;
 shift_mtx_strategy = 'adjacency';
@@ -20,18 +21,31 @@ A = A > threshold;
 A = A - diag(diag(A));
 
 %% Graph Signal
+G = eye(len);
 x = ones(len, 1);
-noise = noise_sigma * randn(size(x));
-x_noisy = x + noise;
-noisy_snr = Snr(x, x_noisy);
+n = noise_sigma * randn(size(x));
+y = G * x + n;
+noisy_snr = Snr(x, y);
 
 Cxx = x * x';
 Cxn = zeros(size(Cxx));
 Cnx = Cxn';
 Cnn = noise_sigma^2 * eye(size(Cxx, 1));
 
+if false
+    G = gpuArray(G);
+    A = gpuArray(A);
+    x = gpuArray(x);
+    n = gpuArray(n);
+    y = gpuArray(y);
+
+    Cxx = gpuArray(Cxx);
+    Cxn = gpuArray(Cxn);
+    Cnx = gpuArray(Cnx);
+    Cnn = gpuArray(Cnn);
+end
+
 %% Experiment
-G = eye(length(x));
 if strcmp(shift_mtx_strategy, 'adjacency')
     shift_mtx = A;
     gft_mtx = GFT_Mtx(shift_mtx, 'tv');
@@ -51,7 +65,7 @@ b.setup([], [], []);
 parfor i = 1:num_iterations
     [gfrft_mtx, igfrft_mtx] = GFRFT_Mtx(gft_mtx, fractional_orders(i));
     x_filtered = Optimal_Filter_Known_Corr(G, gfrft_mtx, igfrft_mtx, ...
-                                           Cxx, Cxn, Cnx, Cnn, x_noisy);
+                                           Cxx, Cxn, Cnx, Cnn, y);
     snrs(i) = Snr(x, x_filtered);
     updateParallel([], pwd);
 end

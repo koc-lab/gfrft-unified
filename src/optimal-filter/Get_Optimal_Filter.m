@@ -1,27 +1,44 @@
 % (c) Copyright 2023 Tuna Alikaşifoğlu
 
 function h_opt = Get_Optimal_Filter(transform_mtx, gfrft_mtx, igfrft_mtx, ...
-                                    cov_xx, corr_xn, corr_nx, corr_nn)
+                                    corr_xx, corr_xn, corr_nx, corr_nn)
+    arguments
+        transform_mtx(:, :) {mustBeNumeric, Must_Be_Square_Matrix}
+        gfrft_mtx(:, :) {mustBeNumeric, Must_Be_Square_Matrix, ...
+                         Must_Be_Equal_Size(gfrft_mtx, transform_mtx)}
+        igfrft_mtx(:, :) {mustBeNumeric, Must_Be_Square_Matrix, ...
+                          Must_Be_Equal_Size(igfrft_mtx, gfrft_mtx)}
+        corr_xx(:, :) {mustBeNumeric, Must_Be_Equal_Size(corr_xx, gfrft_mtx)}
+        corr_xn(:, :) {mustBeNumeric, Must_Be_Equal_Size(corr_xn, corr_xx)}
+        corr_nx(:, :) {mustBeNumeric, Must_Be_Equal_Size(corr_nx, corr_xx)}
+        corr_nn(:, :) {mustBeNumeric, Must_Be_Equal_Size(corr_nn, corr_xx)}
+        graph_signal(:, 1) {mustBeNumeric, mustBeVector, ...
+                            Must_Be_Multiplicable(gfrft_mtx, graph_signal)}
+    end
+
     T = zeros(size(gfrft_mtx));
     q = zeros(size(gfrft_mtx, 1), 1);
+    W = zeros([size(gfrft_mtx, 1), size(gfrft_mtx)]);
 
-    for m = 1:size(gfrft_mtx, 1)
-        wm            = igfrft_mtx(:, m);
-        wm_tilde_T    = gfrft_mtx(m, :);
-        wm_tilde_conj = gfrft_mtx(m, :)';
+    for i = 1:size(W, 1)
+        W(i, :, :) = igfrft_mtx(:, i) * gfrft_mtx(i, :);
+    end
 
-        q(m) = trace((transform_mtx' * wm) * (wm_tilde_T * cov_xx) + ...
-                     (wm_tilde_conj * (wm' * corr_xn)));
+    for m = 1:size(T, 1)
+        Wm = squeeze(W(m, :, :));
 
-        for n = 1:size(gfrft_mtx, 2)
-            wn          = igfrft_mtx(:, n);
-            wn_tilde_T  = gfrft_mtx(n, :);
+        q1 = trace(transform_mtx' * Wm  * corr_xx);
+        q2 = trace(Wm' * corr_xn);
+        q(m) = q1 + q2;
 
-            term1 = (transform_mtx' * wm_tilde_conj) * ...
-              ((wn_tilde_T * transform_mtx) * (cov_xx + corr_nx));
-            term2 = wm_tilde_conj * ...
-              (((wn_tilde_T * transform_mtx) * corr_xn) + (wn_tilde_T * corr_nn));
-            T(m, n) = (wm' * wn) * trace(term1 + term2);
+        for n = 1:size(T, 2)
+            Wn = squeeze(W(n, :, :));
+            Wmn = Wm' * Wn;
+            T1 = trace(transform_mtx' * Wmn * transform_mtx * corr_xx);
+            T2 = trace(Wmn * transform_mtx * corr_xn);
+            T3 = trace(transform_mtx' * Wmn * corr_nx);
+            T4 = trace(Wmn * corr_nn);
+            T(m, n) = T1 + T2 + T3 + T4;
         end
     end
 

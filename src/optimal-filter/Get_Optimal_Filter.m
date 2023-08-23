@@ -12,8 +12,6 @@ function h_opt = Get_Optimal_Filter(transform_mtx, gfrft_mtx, igfrft_mtx, ...
         corr_xn(:, :) {mustBeNumeric, Must_Be_Equal_Size(corr_xn, corr_xx)}
         corr_nx(:, :) {mustBeNumeric, Must_Be_Equal_Size(corr_nx, corr_xx)}
         corr_nn(:, :) {mustBeNumeric, Must_Be_Equal_Size(corr_nn, corr_xx)}
-        graph_signal(:, 1) {mustBeNumeric, mustBeVector, ...
-                            Must_Be_Multiplicable(gfrft_mtx, graph_signal)}
     end
 
     T = zeros(size(gfrft_mtx));

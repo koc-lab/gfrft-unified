@@ -55,7 +55,7 @@ if use_gpu
     snr_dbs = gpuArray(snr_dbs);
 end
 [estimation_snrs, noisy_snrs] = Experiment(gft_mtx, transform_mtx, signals, ...
-                                         fractional_orders, snr_dbs, uncorrelated);
+                                           fractional_orders, snr_dbs, uncorrelated);
 
 results = struct();
 results.dataset_title = dataset_title;
@@ -74,4 +74,3 @@ results.noisy_snrs = noisy_snrs;
 filename = sprintf("results-%s-%dnn-%s.mat", ...
                    dataset_title, knn_count, shift_mtx_strategy);
 save(filename, "-struct", "results");
-

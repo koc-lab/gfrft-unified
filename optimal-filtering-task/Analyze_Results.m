@@ -1,5 +1,9 @@
+% (c) Copyright 2023 Tuna Alikaşifoğlu
+
 %% Clear
-clc, clear, close all;
+clc;
+clear;
+close all;
 
 %% Load data
 
@@ -42,6 +46,3 @@ end
 xlabel("Fractional order");
 ylabel("Average SNR");
 grid on;
-
-
-

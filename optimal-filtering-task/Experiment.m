@@ -1,13 +1,13 @@
 % (c) Copyright 2023 Tuna Alikaşifoğlu
 
 function [estimation_snrs, noisy_snrs] = Experiment(gft_mtx, transform_mtx, signals, ...
-                                         fractional_orders, snr_dbs, uncorrelated);
+                                                    fractional_orders, snr_dbs, uncorrelated)
     arguments
         gft_mtx(:, :) {mustBeNumeric, Must_Be_Square_Matrix}
         transform_mtx(:, :) {mustBeNumeric, Must_Be_Square_Matrix}
         signals(:, :) {mustBeNumeric, Must_Be_Multiplicable(gft_mtx, signals)}
-        fractional_orders(:, 1) {mustBeNumeric,mustBeVector}
-        snr_dbs(:, 1) {mustBeNumeric,mustBeVector}
+        fractional_orders(:, 1) {mustBeNumeric, mustBeVector}
+        snr_dbs(:, 1) {mustBeNumeric, mustBeVector}
         uncorrelated(1, 1) logical = false
     end
 
@@ -21,7 +21,8 @@ function [estimation_snrs, noisy_snrs] = Experiment(gft_mtx, transform_mtx, sign
     end
 
     if use_gpu
-        estimation_snrs = zeros(length(fractional_orders), length(snr_dbs), size(signals, 2), 'gpuArray');
+        estimation_snrs = zeros(length(fractional_orders), length(snr_dbs), ...
+                                size(signals, 2), 'gpuArray');
     else
         estimation_snrs = zeros(length(fractional_orders), length(snr_dbs), size(signals, 2));
     end
@@ -32,9 +33,10 @@ function [estimation_snrs, noisy_snrs] = Experiment(gft_mtx, transform_mtx, sign
             noises = noise_cell{j_snr};
             parfor k_signal = 1:size(signals, 2)
                 graph_signal = signals(:, k_signal);
-                noise = noises(:, k_signal)
+                noise = noises(:, k_signal);
                 filtered_signal = Optimal_Filter_Empirical(transform_mtx, gfrft_mtx, igfrft_mtx, ...
-                                                        graph_signal, noise, uncorrelated, use_gpu)
+                                                           graph_signal, noise, ...
+                                                           uncorrelated, use_gpu);
                 estimation_snrs(i_order, j_snr, k_signal) = Snr(graph_signal, filtered_signal);
             end
         end

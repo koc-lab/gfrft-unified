@@ -1,7 +1,7 @@
 % (c) Copyright 2023 Tuna Alikaşifoğlu
 
-function h_opt = Get_Optimal_Filter_GPU(transform_mtx, gfrft_mtx, igfrft_mtx, ...
-                                        corr_xx, corr_xn, corr_nx, corr_nn)
+function h_opt = Get_Optimal_Filter_Simple_GPU(transform_mtx, gfrft_mtx, igfrft_mtx, ...
+                                               corr_xx, corr_xn, corr_nx, corr_nn)
     arguments
         transform_mtx(:, :) {mustBeNumeric, Must_Be_Square_Matrix, ...
                              mustBeA(transform_mtx, 'gpuArray')}

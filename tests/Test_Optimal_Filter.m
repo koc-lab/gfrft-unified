@@ -32,7 +32,10 @@ Cxn = zeros(size(Cxx));
 Cnx = Cxn';
 Cnn = noise_sigma^2 * eye(size(Cxx, 1));
 
-if false
+num_iterations = length(fractional_orders);
+snrs = zeros(num_iterations, 1);
+
+if use_gpu
     G = gpuArray(G);
     A = gpuArray(A);
     x = gpuArray(x);
@@ -43,6 +46,8 @@ if false
     Cxn = gpuArray(Cxn);
     Cnx = gpuArray(Cnx);
     Cnn = gpuArray(Cnn);
+
+    snrs = gpuArray(snrs);
 end
 
 %% Experiment
@@ -54,8 +59,6 @@ elseif strcmp(shift_mtx_strategy, 'laplacian')
     gft_mtx = GFT_Mtx(shift_mtx, 'ascend');
 end
 
-num_iterations = length(fractional_orders);
-snrs = zeros(num_iterations, 1);
 b = ProgressBar(num_iterations, ...
                 'IsParallel', true, ...
                 'WorkerDirectory', pwd(), ...
@@ -65,7 +68,7 @@ b.setup([], [], []);
 parfor i = 1:num_iterations
     [gfrft_mtx, igfrft_mtx] = GFRFT_Mtx(gft_mtx, fractional_orders(i));
     x_filtered = Optimal_Filter_Known_Corr(G, gfrft_mtx, igfrft_mtx, ...
-                                           Cxx, Cxn, Cnx, Cnn, y);
+                                           Cxx, Cxn, Cnx, Cnn, y, use_gpu);
     snrs(i) = Snr(x, x_filtered);
     updateParallel([], pwd);
 end

@@ -1,7 +1,7 @@
 % (c) Copyright 2023 Tuna Alikaşifoğlu
 
 function filtered_signal = Optimal_Filter_Empirical(transform_mtx, gfrft_mtx, igfrft_mtx, ...
-                                                    graph_signal, noise, uncorrelated)
+                                                    graph_signal, noise, uncorrelated, use_gpu)
     arguments
         transform_mtx(:, :) {mustBeNumeric, Must_Be_Square_Matrix}
         gfrft_mtx(:, :) {mustBeNumeric, Must_Be_Square_Matrix, ...
@@ -12,6 +12,7 @@ function filtered_signal = Optimal_Filter_Empirical(transform_mtx, gfrft_mtx, ig
                             Must_Be_Multiplicable(gfrft_mtx, graph_signal)}
         noise(:, 1) {mustBeNumeric, mustBeVector, Must_Be_Equal_Size(noise, graph_signal)}
         uncorrelated(1, 1) logical {Must_Be_Logical} = false
+        use_gpu(1, 1) logical {Must_Be_Logical} = false
     end
 
     % Generating empirical auto- and cross-correlations
@@ -27,5 +28,5 @@ function filtered_signal = Optimal_Filter_Empirical(transform_mtx, gfrft_mtx, ig
     % Filtering
     filtered_signal = Optimal_Filter_Known_Correlation(transform_mtx, gfrft_mtx, igfrft_mtx, ...
                                                        corr_xx, corr_xn, corr_nx, corr_nn, ...
-                                                       graph_signal);
+                                                       graph_signal, use_gpu);
 end

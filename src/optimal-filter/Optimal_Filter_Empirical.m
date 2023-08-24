@@ -19,7 +19,11 @@ function filtered_signal = Optimal_Filter_Empirical(transform_mtx, gfrft_mtx, ig
     corr_xx = graph_signal * graph_signal';
     corr_nn = noise * noise';
     if uncorrelated
-        corr_xn = zeros(length(graph_signal), length(noise));
+        if use_gpu
+            corr_xn = zeros(length(graph_signal), length(noise), 'gpuArray');
+        else
+            corr_xn = zeros(length(graph_signal), length(noise));
+        end
     else
         corr_xn = graph_signal * noise';
     end

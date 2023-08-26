@@ -102,7 +102,7 @@ classdef ProgressBar < matlab.System
         TicObject;
         TimerObject;
         
-        MaxBarWidth = 90;
+        MaxBarWidth = 60;
         CurrentTitleState = '';
         CurrentFont;
     end

@@ -20,7 +20,7 @@ snr_dbs = results.snr_dbs;
 snr_idx = 1;
 
 figure;
-[X, Y] = meshgrid(1:100, fractional_orders);
+[X, Y] = meshgrid(1:size(estimation_snrs, 3), fractional_orders);
 surf(X, Y, squeeze(estimation_snrs(:, snr_idx, :)));
 xlabel("Signal Index");
 ylabel("Fractional order");

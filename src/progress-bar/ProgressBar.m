@@ -278,15 +278,15 @@ classdef ProgressBar < matlab.System
                 if length(obj.Title) > obj.MAX_TITLE_LENGTH
                     obj.CurrentTitleState = [obj.CurrentTitleState, ' -- '];
                 end
-                
-                % if the bar is used in a parallel setup start the timer right now
-                if obj.IsParallel
-                    obj.startTimer();
-                end
-                
+
                 % if this is a nested bar hit return
                 if obj.IsThisBarNested
                     fprintf(1, '\n');
+                end
+
+                % if the bar is used in a parallel setup start the timer right now
+                if obj.IsParallel
+                    obj.startTimer();
                 end
                 obj.printProgressBar();
             end

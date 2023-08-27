@@ -26,12 +26,41 @@ if false
 else
     start = 1;
 end
+plts = [];
+legends = [];
 for i_snr = 1:length(snr_dbs)
-    plot(fractional_orders(start:end), estimation_snrs(start:end, i_snr));
+    snrs = estimation_snrs(start:end, i_snr);
+    fractional_orders = fractional_orders(start:end);
+    legends = [legends; sprintf("Initial SNR = %.2f dB", noisy_snrs(i_snr))];
+    plt = plot(fractional_orders, snrs, 'LineWidth', 2);
+    plts = [plts; plt];
     hold on;
-    yline(noisy_snrs(i_snr), '--');
+
+    max_idx = Matrix_Idx(snrs, 'max');
+    max_point = plot(fractional_orders(max_idx), snrs(max_idx), '.');
+    datatip(max_point);
+    labels  = ["$a$", "SNR"];
+    formats = ["%.2f", "%.2f"];
+    for i = 1:length(max_point.DataTipTemplate.DataTipRows)
+        max_point.DataTipTemplate.DataTipRows(i).Label  = labels(i);
+        max_point.DataTipTemplate.DataTipRows(i).Format = formats(i);
+    end
+    max_point.DataTipTemplate.Interpreter = "latex";
+
+    gft_idx = (fractional_orders == 1);
+    if any(gft_idx) && (fractional_orders(max_idx) ~= 1)
+        gft_point = plot(fractional_orders(gft_idx), snrs(gft_idx), '.');
+        datatip(gft_point);
+        for i = 1:length(gft_point.DataTipTemplate.DataTipRows)
+            gft_point.DataTipTemplate.DataTipRows(i).Label  = labels(i);
+            gft_point.DataTipTemplate.DataTipRows(i).Format = formats(i);
+        end
+        gft_point.DataTipTemplate.Interpreter = "latex";
+    end
 end
+title(sprintf("SNR vs fractional order for %s dataset", dataset_title));
 xlabel("Fractional order");
 ylabel("Average SNR");
+legend(plts, legends);
 grid on;
 

@@ -24,7 +24,18 @@ function [estimation_snrs, noisy_snrs] = Experiment_Common(gft_mtx, transform_mt
 
     corr_xx = Generate_Correlation_Matrix(signals);
     estimation_snrs = zeros(length(fractional_orders), length(snr_dbs), 'like', signals);
-    for j_snr = progress(1:length(snr_dbs))
+
+    num_outer_iter = length(snr_dbs);
+    num_inner_iter = length(fractional_orders);
+    outer_bar = ProgressBar(num_outer_iter, 'Title', 'SNR');
+    outer_bar.setup([], [], []);
+    for j_snr = 1:num_outer_iter
+        inner_bar = ProgressBar(num_inner_iter, ...
+            'IsParallel', true, ...
+            'Title', 'Order' ...
+        );
+        inner_bar.setup([], [], []);
+
         % Calculate correlation matrices
         corr_nn = Generate_Correlation_Matrix(noises(j_snr, :, :));
         if uncorrelated
@@ -34,7 +45,7 @@ function [estimation_snrs, noisy_snrs] = Experiment_Common(gft_mtx, transform_mt
         end
         corr_nx = corr_xn';
 
-        parfor i_order = 1:length(fractional_orders)
+        parfor i_order = 1:num_inner_iter
             [gfrft_mtx, igfrft_mtx] = GFRFT_Mtx(gft_mtx, fractional_orders(i_order));
 
             % Filter
@@ -45,8 +56,13 @@ function [estimation_snrs, noisy_snrs] = Experiment_Common(gft_mtx, transform_mt
 
             % Save SNR
             estimation_snrs(i_order, j_snr) = Snr(signals, filtered_signals);
+            updateParallel();
         end
+        inner_bar.release();
+        outer_bar([], [], []);
     end
+    outer_bar.release();
+    ProgressBar.deleteAllTimers();
 end
 
 function corr_mtx = Generate_Correlation_Matrix(first, second)

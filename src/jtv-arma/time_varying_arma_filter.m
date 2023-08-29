@@ -39,7 +39,7 @@ num = b; den = a;
 [residues,poles,addTerm] = residue(wrev(num), wrev(den));
 
 if isempty(addTerm), addTerm = 0; end
-if addTerm ~= 0, disp('warning: addTerm non zero'); addTerm = sum(addTerm); end
+if verbose && addTerm ~= 0, disp('warning: addTerm non zero'); addTerm = sum(addTerm); end
 
 
 % recursion coefficients (y_{t+1} = psi M y_{t} + phi x)

@@ -6,13 +6,14 @@ clear;
 close all;
 
 %% Graph Generation
+seed = 0;
 rng("default");
 use_gpu = false;
 dataset = "../../data/tv-graph-datasets/sea-surface-temperature.mat";
 dataset_title = "SST";
 knn_count = 5;
-rng(0);
-gpurng(0);
+rng(seed);
+gpurng(seed);
 knn_sigma = 10000;
 max_node_count = 100;
 max_time_instance = 120;
@@ -20,41 +21,43 @@ verbose = false;
 [graph, signals] = Init_KNN_Real(dataset, knn_count, knn_sigma, ...
                                  max_node_count, max_time_instance, verbose);
 
-% shift_strategy = 'adjacency';
-% [gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(full(graph.W), shift_strategy);
+%% Pool
+pool = gcp('nocreate');
+if isempty(pool)
+    parpool();
+    disp('Parallel pool created.');
+else
+    disp('Parallel pool already exists.');
+end
 
 %% Load data
 signals = signals / max(signals(:));
-
-%% Graph ARMA Laplacian
-graph = gsp_create_laplacian(graph, 'normalized');
-graph = gsp_estimate_lmax(graph);
-graph = gsp_compute_fourier_basis(graph);
-
-l  = linspace(0, graph.lmax, 300);
-M  = sparse(0.5 * graph.lmax * speye(graph.N) - graph.L);
-mu = graph.lmax / 2 - l;
-
-%% Graph ARMA Parameters
-order = 2;
-normalize = false;
-[b, a] = Get_Arma_Coeff(graph, mu, order, normalize);
-fprintf("Generating Results for ARMA%d Filter:\n", length(a));
+order = 3;
+normalize = true;
+fprintf("Generating Results for order: %d\n", order);
 
 %% Noise Parameters
 snr_dbs = [1, 2, 3];
-for snr_db = snr_dbs
+num_outer_iter = length(snr_dbs);
+outer_bar = ProgressBar(num_outer_iter, 'Title', 'SNR');
+outer_bar.setup([], [], []);
+for i_snr = 1:num_outer_iter
     % Noise and Covariance matrices
-    signals_noisy = Add_Noise(signals, snr_db);
-    noisy_snr = Snr(signals, signals_noisy);
-    fprintf("\tNoisy  SNR: %.2f dB\n", noisy_snr);
+    snr_db = snr_dbs(i_snr);
+    noisy_signals = Add_Noise(signals, snr_db);
+    noisy_snr = Snr(signals, noisy_signals);
 
     % Filter
-    signals_filtered = time_varying_arma_filter(M, b, a, signals_noisy);
-    signals_filtered = real(signals_filtered);
-    filtered_snr = Snr(signals, signals_filtered);
-    fprintf("\tFiltered SNR: %.2f dB\n", filtered_snr);
+    [filtered_snr, lambda] = ARMA_Grid_Search(graph, signals, noisy_signals, ...
+                                              order, normalize);
+    outer_bar.printMessage( ...
+                           sprintf("\tNoisy: %.2f dB, Filtered: %.2f dB (lambda=%.2f)", ...
+                                   noisy_snr, filtered_snr, lambda) ...
+                          );
+    outer_bar([], [], []);
 end
+outer_bar.release();
+ProgressBar.deleteAllTimers();
 
 %% Helper functions
 function noisy = Add_Noise(signal, snr_db)

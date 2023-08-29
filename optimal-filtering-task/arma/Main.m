@@ -7,7 +7,6 @@ close all;
 
 %% Graph Generation
 seed = 0;
-rng("default");
 use_gpu = false;
 dataset = "../../data/tv-graph-datasets/sea-surface-temperature.mat";
 dataset_title = "SST";

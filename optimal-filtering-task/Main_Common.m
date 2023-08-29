@@ -6,13 +6,14 @@ clear;
 close all;
 
 %% Graph Generation
+seed = 0;
 use_gpu = false;
 dataset = "../data/tv-graph-datasets/sea-surface-temperature.mat";
 dataset_title = "SST";
 knn_count = 10;
-rng(0);
-gpurng(0);
 knn_sigma = 1000;
+rng(seed);
+gpurng(seed);
 max_node_count = 100;
 max_time_instance = 302;
 verbose = false;

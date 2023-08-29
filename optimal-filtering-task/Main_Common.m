@@ -10,17 +10,18 @@ seed = 0;
 use_gpu = false;
 dataset = "../data/tv-graph-datasets/sea-surface-temperature.mat";
 dataset_title = "SST";
-knn_count = 10;
-knn_sigma = 1000;
+knn_count = 5;
 rng(seed);
 gpurng(seed);
+knn_sigma = 10000;
 max_node_count = 100;
-max_time_instance = 302;
+max_time_instance = 120;
 verbose = false;
 [graph, signals] = Init_Real(dataset, knn_count, knn_sigma, ...
                              max_node_count, max_time_instance, verbose);
 
-signals = signals - mean(signals, 2);
+% signals = signals - mean(signals, 2);
+signals = signals / max(signals(:));
 
 % shift_mtx_strategy = 'adjacency';
 shift_mtx_strategy = 'laplacian';
@@ -39,8 +40,7 @@ end
 %% Experiment
 transform_mtx = eye(size(signals, 1));
 uncorrelated = true;
-% snr_dbs = [3, 4, 5, 7, 8, 10, 12, 15];
-snr_dbs = [4, 5];
+snr_dbs = [1, 2, 3];
 fractional_orders = -2.0:0.1:2.0;
 
 pool = gcp('nocreate');

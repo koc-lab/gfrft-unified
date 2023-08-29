@@ -8,7 +8,7 @@ close all;
 %% Load data
 % dataset_title = "COVID-USA";
 dataset_title = "SST";
-knn_count = 10;
+knn_count = 5;
 % shift_mtx_strategy = 'adjacency';
 shift_mtx_strategy = 'laplacian';
 filename = sprintf("results-common-%s-%dnn-%s.mat", ...

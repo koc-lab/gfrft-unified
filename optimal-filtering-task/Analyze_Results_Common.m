@@ -63,4 +63,3 @@ xlabel("Fractional order");
 ylabel("Average SNR");
 legend(plts, legends);
 grid on;
-

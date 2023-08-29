@@ -17,8 +17,8 @@ knn_sigma = 10000;
 max_node_count = 100;
 max_time_instance = 120;
 verbose = false;
-[graph, signals] = Init_Real(dataset, knn_count, knn_sigma, ...
-                             max_node_count, max_time_instance, verbose);
+[graph, signals] = Init_KNN_Real(dataset, knn_count, knn_sigma, ...
+                                 max_node_count, max_time_instance, verbose);
 
 % signals = signals - mean(signals, 2);
 signals = signals / max(signals(:));

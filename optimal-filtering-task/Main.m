@@ -16,8 +16,8 @@ knn_sigma = 1;
 max_node_count = 100;
 max_time_instance = 100;
 verbose = false;
-[graph, signals] = Init_Real(dataset, knn_count, knn_sigma, ...
-                             max_node_count, max_time_instance, verbose);
+[graph, signals] = Init_KNN_Real(dataset, knn_count, knn_sigma, ...
+                                 max_node_count, max_time_instance, verbose);
 
 shift_mtx_strategy = 'adjacency';
 % shift_mtx_strategy = 'laplacian';

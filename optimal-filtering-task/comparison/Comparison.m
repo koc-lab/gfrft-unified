@@ -35,9 +35,10 @@ gpurng(seed);
                                  max_node_count, max_time_instance, verbose);
 
 %% Setup
-% signals = signals - mean(signals, 2);
-% signals = Normalize_Plus_Minus_One(signals);
 % signals = signals / max(signals(:));
+% signals = signals - mean(signals, 2);
+signals = Normalize_Zero_One(signals);
+% signals = Normalize_Plus_Minus_One(signals);
 
 %% Parallel Pool
 pool = gcp('nocreate');
@@ -48,8 +49,8 @@ else
     disp('Parallel pool already exists.');
 end
 
-deviation = std(signals(:));
-sigmas = deviation * [0.75, 1.0, 1.25];
+sigmas = [0.01, 0.03, 0.05];
+noisy_snrs      = zeros(length(sigmas), 1);
 arma_snrs       = zeros(length(sigmas), length(arma_orders));
 arma_lambdas    = zeros(length(sigmas), length(arma_orders));
 median_snrs     = zeros(length(sigmas), length(median_orders));
@@ -58,7 +59,7 @@ gfrft_snrs      = zeros(length(sigmas), length(gfrft_strategies), length(fractio
 for i_sigma = 1:length(sigmas)
     %% Generate Noisy Signals
     noisy_signals = signals + Generate_Noise(signals, sigmas(i_sigma));
-    noisy_snr = Snr(signals, noisy_signals);
+    noisy_snrs(i_sigma) = Snr(signals, noisy_signals);
     fprintf("Noisy SNR: %.4f\n", noisy_snr);
 
     %% ARMA Experiment
@@ -97,23 +98,9 @@ for i_sigma = 1:length(sigmas)
 end
 
 %% Save Results
-% results = struct();
-% results.dataset_title = dataset_title;
-% results.graph = graph;
-% results.knn_count = knn_count;
-% results.knn_sigma = knn_sigma;
-% results.max_node_count = max_node_count;
-% results.max_time_instance = max_time_instance;
-% results.fractional_orders = fractional_orders;
-% results.snr_dbs = snr_dbs;
-% results.uncorrelated = uncorrelated;
-% results.transform_mtx = transform_mtx;
-% results.estimation_snrs = estimation_snrs;
-% results.noisy_snrs = noisy_snrs;
-%
-% filename = sprintf("comparison-%s-%dnn-%s.mat", ...
-%                    dataset_title, knn_count, shift_mtx_strategy);
-% save(filename, "-struct", "results");
+filename = sprintf("comparison-%s-%dnn.mat", ...
+                   dataset_title, knn_count);
+save(filename);
 
 %% Functions
 function noise = Generate_Noise(signal, sigma)

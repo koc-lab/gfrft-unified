@@ -46,7 +46,7 @@ else
 end
 
 deviation = std(signals(:));
-sigmas = deviation * [0.5, 1.0, 1.5];
+sigmas = deviation * [0.75, 1.0, 1.25];
 arma_snrs       = zeros(length(sigmas), length(arma_orders));
 arma_lambdas    = zeros(length(sigmas), length(arma_orders));
 median_snrs     = zeros(length(sigmas), length(median_orders));

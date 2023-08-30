@@ -21,7 +21,7 @@ function [gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(weighted_adj_m
     elseif strcmp(strategy, 'symmetric normalized adjacency')
         shift_mtx = Get_Sym_Normalized_Adjacency(weighted_adj_mtx);
     elseif strcmp(strategy, 'normalized laplacian')
-        normalized_adj = Get_Normalized_Adjacency(weighted_adj_mtx);
+        normalized_adj = Get_Sym_Normalized_Adjacency(weighted_adj_mtx);
         identity = eye(size(normalized_adj, 1), 'like', normalized_adj);
         shift_mtx = identity - normalized_adj;
     end

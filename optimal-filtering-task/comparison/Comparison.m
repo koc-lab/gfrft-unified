@@ -25,6 +25,7 @@ knn_sigma = 10000;
 max_node_count = 100;
 max_time_instance = 120;
 verbose = false;
+gfrft_strategies = ["adjacency", "laplacian"];
 rng(seed);
 gpurng(seed);
 [graph, signals] = Init_KNN_Real(dataset, knn_count, knn_sigma, ...
@@ -34,9 +35,6 @@ gpurng(seed);
 % signals = signals - mean(signals, 2);
 % signals = Normalize_Plus_Minus_One(signals);
 % signals = signals / max(signals(:));
-strategy = 'laplacian';
-[gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(full(graph.W), strategy);
-gfrft_transform_mtx = eye(size(signals, 1));
 
 %% Parallel Pool
 pool = gcp('nocreate');
@@ -52,7 +50,7 @@ sigmas = deviation * [0.5, 1.0, 1.5];
 arma_snrs       = zeros(length(sigmas), length(arma_orders));
 arma_lambdas    = zeros(length(sigmas), length(arma_orders));
 median_snrs     = zeros(length(sigmas), length(median_orders));
-gfrft_snrs      = zeros(length(sigmas), length(fractional_orders));
+gfrft_snrs      = zeros(length(sigmas), length(gfrft_strategies), length(fractional_orders));
 
 for i_sigma = 1:length(sigmas)
     %% Generate Noisy Signals
@@ -79,14 +77,20 @@ for i_sigma = 1:length(sigmas)
             median_snrs(i_sigma, 1), median_snrs(i_sigma, 2));
 
     %% GFRFT Experiment
-    gfrft_snrs(i_sigma, :) = GFRFT_Experiment(gft_mtx, gfrft_transform_mtx, ...
-                                              signals, noisy_signals, ...
-                                              fractional_orders, uncorrelated);
-    max_idx = Matrix_Idx(gfrft_snrs(i_sigma, :).', 'max');
-    assert(max(gfrft_snrs(i_sigma, :)) == gfrft_snrs(i_sigma, max_idx));
-    fprintf("GFT: %.4f, GFRFT: %.4f (a=%.2f)\n", ...
-            gfrft_snrs(i_sigma, fractional_orders == 1), ...
-            gfrft_snrs(i_sigma, max_idx), fractional_orders(max_idx));
+    for j_strategy = 1:length(gfrft_strategies)
+        strategy = gfrft_strategies(j_strategy);
+        [gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(full(graph.W), strategy);
+        gfrft_transform_mtx = eye(size(signals, 1));
+
+        gfrft_snrs(i_sigma, j_strategy, :) = GFRFT_Experiment(gft_mtx, gfrft_transform_mtx, ...
+                                                              signals, noisy_signals, ...
+                                                              fractional_orders, uncorrelated);
+        [max_snr, max_idx] = max(gfrft_snrs(i_sigma, j_strategy, :));
+        fprintf("Strategy: %s\n\tGFT: %.4f, GFRFT: %.4f (a=%.2f)\n", ...
+                strategy, ...
+                gfrft_snrs(i_sigma, j_strategy, fractional_orders == 1), ...
+                max_snr, fractional_orders(max_idx));
+    end
 end
 
 %% Save Results

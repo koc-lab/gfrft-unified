@@ -59,13 +59,10 @@ for i_sigma = 1:length(sigmas)
     noisy_signals = signals + Generate_Noise(signals, sigmas(i_sigma));
     noisy_snr = Snr(signals, noisy_signals);
     fprintf("Noisy SNR: %.4f\n", noisy_snr);
-    % [original, noisy] = Normalize(signals, noisy_signals);
-    original = signals;
-    noisy = noisy_signals;
 
     %% ARMA Experiment
     for j_arma = 1:length(arma_orders)
-        [arma_snr, lambda] = ARMA_Grid_Search(graph, original, noisy, arma_lambda_cuts, ...
+        [arma_snr, lambda] = ARMA_Grid_Search(graph, signals, noisy_signals, arma_lambda_cuts, ...
                                               arma_orders(j_arma), arma_normalize);
         arma_snrs(i_sigma, j_arma) = arma_snr;
         arma_lambdas(i_sigma, j_arma) = lambda;
@@ -75,7 +72,7 @@ for i_sigma = 1:length(sigmas)
 
     %% Median Experiment
     for j_median = 1:length(median_orders)
-        median_filtered_signals = Median_Filter(graph.A, noisy, median_orders(j_median));
+        median_filtered_signals = Median_Filter(graph.A, noisy_signals, median_orders(j_median));
         median_snrs(i_sigma, j_median) = Snr(signals, median_filtered_signals);
     end
     fprintf("Median1: %.4f, Median2: %.4f\n", ...
@@ -114,11 +111,4 @@ end
 %% Functions
 function noise = Generate_Noise(signal, sigma)
     noise = sigma * randn(size(signal), 'like', signal);
-end
-
-function [original, noisy] = Normalize(signals, noisy_signals)
-    min_value = min(signals(:));
-    max_value = max(signals(:));
-    original = (signals - min_value) / (max_value - min_value);
-    noisy = (noisy_signals - min_value) / (max_value - min_value);
 end

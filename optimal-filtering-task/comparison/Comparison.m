@@ -13,17 +13,17 @@ arma_normalize = true;
 % Median
 median_orders = [1, 2];
 % GFRFT
-fractional_orders = -2.0:0.1:2.0;
+fractional_orders = -2.0:0.01:2.0;
 uncorrelated = true;
 
 %% Graph Generation
 seed = 0;
-dataset = "../../data/tv-graph-datasets/sea-surface-temperature.mat";
-dataset_title = "SST";
+dataset = "../../data/tv-graph-datasets/pm25-concentration.mat";
+dataset_title = "PM-25";
 knn_count = 5;
 knn_sigma = 10000;
-max_node_count = 100;
-max_time_instance = 120;
+max_node_count = 93;
+max_time_instance = 304;
 verbose = false;
 gfrft_strategies = ["adjacency", "laplacian"];
 rng(seed);

@@ -50,6 +50,13 @@ else
 end
 
 sigmas = [0.01, 0.03, 0.05];
+% for i_sigma = 1:length(sigmas)
+%     noisy_signals = signals + Generate_Noise(signals, sigmas(i_sigma));
+%     noisy_snr = Snr(signals, noisy_signals);
+%     fprintf("Noisy SNR: %.4f\n", noisy_snr);
+% end
+% return;
+
 noisy_snrs      = zeros(length(sigmas), 1);
 arma_snrs       = zeros(length(sigmas), length(arma_orders));
 arma_lambdas    = zeros(length(sigmas), length(arma_orders));

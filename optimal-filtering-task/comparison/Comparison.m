@@ -60,7 +60,7 @@ for i_sigma = 1:length(sigmas)
     %% Generate Noisy Signals
     noisy_signals = signals + Generate_Noise(signals, sigmas(i_sigma));
     noisy_snrs(i_sigma) = Snr(signals, noisy_signals);
-    fprintf("Noisy SNR: %.4f\n", noisy_snr);
+    fprintf("Noisy SNR: %.4f\n", noisy_snrs(i_sigma));
 
     %% ARMA Experiment
     for j_arma = 1:length(arma_orders)

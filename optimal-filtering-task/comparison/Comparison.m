@@ -52,6 +52,7 @@ for k_knn_count = 1:length(knn_counts)
     rng(seed);
     gpurng(seed);
     knn_count = knn_counts(k_knn_count);
+
     [graph, signals] = Init_KNN_Real(dataset, knn_count, knn_sigma, ...
                                      max_node_count, max_time_instance, verbose);
     % signals = signals / max(signals(:));
@@ -66,11 +67,12 @@ for k_knn_count = 1:length(knn_counts)
     % end
     % return;
 
+    fprintf("Generating results for %d-NN Graph...\n", knn_count);
     for i_sigma = 1:length(sigmas)
         %% Generate Noisy Signals
         noisy_signals = signals + Generate_Noise(signals, sigmas(i_sigma));
         noisy_snrs(k_knn_count, i_sigma) = Snr(signals, noisy_signals);
-        fprintf("Noisy SNR: %.4f\n", noisy_snrs(i_sigma));
+        fprintf("Noisy SNR: %.4f\n", noisy_snrs(k_knn_count, i_sigma));
 
         %% ARMA Experiment
         for j_arma = 1:length(arma_orders)
@@ -111,6 +113,7 @@ for k_knn_count = 1:length(knn_counts)
                     max_snr, fractional_orders(max_idx));
         end
     end
+    fprintf("\n\n\n");
 end
 
 %% Save Results

@@ -1,6 +1,7 @@
 # Graph Fractional Fourier Transform: A Unified Theory - Experiments
 
 ![MATLAB](https://img.shields.io/badge/MATLAB-2023a-orange.svg)
+[![Styling, Metrics & Linting by miss_hit](https://img.shields.io/badge/Styling,%20Metrics%20%26%20Linting-miss_hit-blue)](https://misshit.org/)
 [![License](https://img.shields.io/github/license/koc-lab/gfrft-unified)](https://github.com/koc-lab/gfrft-unified/blob/main/LICENSE)
 
 According to the feedback of the reviewers, the _Graph Fractional Fourier Transform: A Unified Theory_ paper needed updates for the experiments. This repository contains the source code and will serve as documentation for the updated experiments.
@@ -12,12 +13,13 @@ According to the feedback of the reviewers, the _Graph Fractional Fourier Transf
   - [Dependencies](#dependencies)
   - [Installation](#installation)
   - [Usage](#usage)
+  - [⚠️ Warnings](#️-warnings)
 
 ## Dependencies
 
 1. EPFL's _Graph Signal Processing Toolbox_ (`gspbox`): see [GitHub](https://github.com/epfl-lts2/gspbox) and [documentation](https://epfl-lts2.github.io/gspbox-html/) pages.
     - The project assumes the `gspbox` directory is present in the root of the project, and compiled according to the directives presented in the [documentation](https://epfl-lts2.github.io/gspbox-html/download.html).
-    - If you already have a way to include `gspbox` to your path, then you can ignore this. However, if you want to download the code with its `gspbox` dependency, you need to use `--recursive` option while cloning, e.g.,
+    - If you already have a way to include `gspbox` in your path, then you can ignore this. However, if you want to download the code with its `gspbox` dependency, you need to use `--recursive` option while cloning, e.g.,
 
         ```sh
         git clone --recursive https://github.com/koc-lab/gfrft-unified.git
@@ -63,4 +65,4 @@ Successfully initialized GFRFT Unified Project by Tuna Alikaşifoğlu.
 
 ## ⚠️ Warnings
 
-- The [`gspbox`](https://github.com/epfl-lts2/gspbox)'s [`unlockbox`](https://github.com/epfl-lts2/unlocbox) addition overrides [`snr.m`](https://github.com/epfl-lts2/unlocbox/blob/df22b021536c0f4e0411cd07c23fa916bd9dbb6d/utils/snr.m#L1-L29) of signal toolbox. For an original signal `x` and same size noise `n`, the original SNR is calculated with `snr(x, n)`, with the [`unlockbox`](https://github.com/epfl-lts2/unlocbox) addition, it is calculated with `snr(x, x + n)`. To provide consistency custom [`Snr.m`](./src/Snr.m) is provided to calculate in the calling convention of `Snr(x, x + n)`, but calculation style of default MATLAB implementation, whether [`unlockbox`](https://github.com/epfl-lts2/unlocbox) is imported or not, which utilizes the convention of [`unlockbox`](https://github.com/epfl-lts2/unlocbox).
+- The [`gspbox`](https://github.com/epfl-lts2/gspbox)'s [`unlockbox`](https://github.com/epfl-lts2/unlocbox) addition overrides [`snr.m`](https://github.com/epfl-lts2/unlocbox/blob/df22b021536c0f4e0411cd07c23fa916bd9dbb6d/utils/snr.m#L1-L29) of the signal toolbox. For an original signal `x` and same size noise `n`, the original SNR is calculated with `snr(x, n)`, with the [`unlockbox`](https://github.com/epfl-lts2/unlocbox) addition, it is calculated with `snr(x, x + n)`. To provide consistency custom [`Snr.m`](./src/Snr.m) is provided to calculate in the calling convention of `Snr(x, x + n)`, but the calculation style of default MATLAB implementation, whether [`unlockbox`](https://github.com/epfl-lts2/unlocbox) is imported or not, utilizes the convention of [`unlockbox`](https://github.com/epfl-lts2/unlocbox).

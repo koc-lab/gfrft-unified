@@ -8,7 +8,7 @@ close all;
 %% Experiment Parameters
 % ARMA
 arma_orders = [1, 2, 3]; % Corresponds to ARMA3,4,5
-arma_lambda_cuts = 0:0.1:2;
+arma_lambda_cuts = 0:0.01:2;
 arma_normalize = true;
 % Median
 median_orders = [1, 2];

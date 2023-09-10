@@ -1,6 +1,12 @@
 % (c) Copyright 2023 Tuna Alikaşifoğlu
 
-function [graph, x] = Get_Community_Graph(node_count)
+function [graph, x] = Get_Community_Graph(node_count, normalize)
+    arguments
+        node_count(1, 1) {mustBeInteger}
+        normalize(1, :) char{mustBeMember(normalize, ...
+                                          {'none', 'zero-mean', 'zero-one', ...
+                                           'plus-minus-one'})} = 'none'
+    end
     rng('default');
     community_count = round(sqrt(node_count) / 2);
     param = struct('Nc', community_count);
@@ -12,5 +18,11 @@ function [graph, x] = Get_Community_Graph(node_count)
         x(1 + community_limits(i):community_limits(i + 1)) = i;
     end
 
-    x = Normalize_Plus_Minus_One(x);
+    if strcmp(normalize, 'zero-mean')
+        x = x - mean(x);
+    elseif strcmp(normalize, 'zero-one')
+        x = Normalize_Zero_One(x);
+    elseif strcmp(normalize, 'plus-minus-one')
+        x = Normalize_Plus_Minus_One(x);
+    end
 end

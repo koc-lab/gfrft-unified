@@ -43,8 +43,15 @@ sigmas = [0.25, 0.30, 0.40, 0.50, 0.60, 0.75];
 
 rng('default');
 gpurng('default');
+
+num_outer_iter = length(sigmas);
+num_inner_iter = length(fractional_orders);
+outer_bar = ProgressBar(num_outer_iter, 'Title', 'sigmas');
+outer_bar.setup([], [], []);
+
 snrs = zeros(length(sigmas), length(fractional_orders));
-for i_sigma = progress(1:length(sigmas))
+[gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(full(graph.W), strategy);
+for i_sigma = 1:num_outer_iter
     sigma = sigmas(i_sigma);
     noise = Generate_Noise(signal, sigma);
     noisy_signal = signal + noise;
@@ -58,8 +65,11 @@ for i_sigma = progress(1:length(sigmas))
     end
     corr_nx = corr_xn';
 
-    [gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(full(graph.W), strategy);
-    parfor i_order = 1:length(fractional_orders)
+    inner_bar = ProgressBar(num_inner_iter, ...
+                            'IsParallel', true, ...
+                            'Title', 'Order');
+    inner_bar.setup([], [], []);
+    parfor i_order = 1:num_inner_iter
         order = fractional_orders(i_order);
         [gfrft_mtx, igfrft_mtx] = GFRFT_Mtx(gft_mtx, order);
         filtered_signal = Optimal_Filter_Known_Corr(transform_mtx, ...
@@ -67,8 +77,13 @@ for i_sigma = progress(1:length(sigmas))
                                                     corr_xx, corr_xn, corr_nx, corr_nn, ...
                                                     signal);
         snrs(i_sigma, i_order) = Snr(signal, filtered_signal);
+        updateParallel();
     end
+    inner_bar.release();
+    outer_bar([], [], []);
 end
+outer_bar.release();
+ProgressBar.deleteAllTimers();
 
 figure;
 for i_sigma = 1:length(sigmas)

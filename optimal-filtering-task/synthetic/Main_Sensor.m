@@ -2,7 +2,7 @@
 
 %% Clear
 clc;
-clear all;
+clear;
 close all;
 
 %% Parallel Pool
@@ -15,21 +15,29 @@ else
 end
 
 %% Graph Generation
+display = false;
 node_count = 100;
-[graph, signal] = Get_Sensor_Graph(node_count, 'none');
-% [graph, signal] = Get_Sensor_Graph(node_count, 'zero-mean');
-% [graph, signal] = Get_Sensor_Graph(node_count, 'zero-one');
-% [graph, signal] = Get_Sensor_Graph(node_count, 'plus-minus-one');
+% normalization = 'none';
+normalization = 'zero-mean';
+% normalization = 'zero-one';
+% normalization = 'plus-minus-one';
+[graph, signal] = Get_Sensor_Graph(node_count, normalization);
 
-figure;
-plotparam.vertex_size = 300;
-gsp_plot_signal(graph, signal, plotparam);
-% return
+if display
+    figure;
+    plotparam.vertex_size = 300;
+    gsp_plot_signal(graph, signal, plotparam);
+end
 
 %% Optimal Filtering
-strategy = 'laplacian';
+gft_strategies = ["adjacency", ...
+                  "laplacian", ...
+                  "row normalized adjacency", ...
+                  "symmetric normalized adjacency", ...
+                  "normalized laplacian"];
+strategy = 'row normalized adjacency';
 seed = 0;
-fractional_orders = 0.50:0.01:1.50;
+fractional_orders = -2.0:2:2.0;
 uncorrelated = true;
 transform_mtx = eye(graph.N);
 sigmas = [0.25, 0.30, 0.40, 0.50, 0.60, 0.75];
@@ -49,48 +57,57 @@ num_inner_iter = length(fractional_orders);
 outer_bar = ProgressBar(num_outer_iter, 'Title', 'sigmas');
 outer_bar.setup([], [], []);
 
-snrs = zeros(length(sigmas), length(fractional_orders));
-[gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(full(graph.W), strategy);
-for i_sigma = 1:num_outer_iter
-    sigma = sigmas(i_sigma);
-    noise = Generate_Noise(signal, sigma);
-    noisy_signal = signal + noise;
+for strategy = gft_strategies
+    snrs = zeros(length(sigmas), length(fractional_orders));
+    [gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(full(graph.W), strategy);
+    for i_sigma = 1:num_outer_iter
+        sigma = sigmas(i_sigma);
+        noise = Generate_Noise(signal, sigma);
+        noisy_signal = signal + noise;
 
-    corr_xx = Generate_Correlation_Matrix(signal);
-    corr_nn = Generate_Correlation_Matrix(noise);
-    if uncorrelated
-        corr_xn = zeros(size(corr_xx), 'like', corr_xx);
-    else
-        corr_xn = Generate_Correlation_Matrix(signal, noise);
-    end
-    corr_nx = corr_xn';
+        corr_xx = Generate_Correlation_Matrix(signal);
+        corr_nn = Generate_Correlation_Matrix(noise);
+        if uncorrelated
+            corr_xn = zeros(size(corr_xx), 'like', corr_xx);
+        else
+            corr_xn = Generate_Correlation_Matrix(signal, noise);
+        end
+        corr_nx = corr_xn';
 
-    inner_bar = ProgressBar(num_inner_iter, ...
-                            'IsParallel', true, ...
-                            'Title', 'Order');
-    inner_bar.setup([], [], []);
-    parfor i_order = 1:num_inner_iter
-        order = fractional_orders(i_order);
-        [gfrft_mtx, igfrft_mtx] = GFRFT_Mtx(gft_mtx, order);
-        filtered_signal = Optimal_Filter_Known_Corr(transform_mtx, ...
-                                                    gfrft_mtx, igfrft_mtx, ...
-                                                    corr_xx, corr_xn, corr_nx, corr_nn, ...
-                                                    signal);
-        snrs(i_sigma, i_order) = Snr(signal, filtered_signal);
-        updateParallel();
+        inner_bar = ProgressBar(num_inner_iter, ...
+                                'IsParallel', true, ...
+                                'Title', 'Order');
+        inner_bar.setup([], [], []);
+        parfor i_order = 1:num_inner_iter
+            order = fractional_orders(i_order);
+            [gfrft_mtx, igfrft_mtx] = GFRFT_Mtx(gft_mtx, order);
+            filtered_signal = Optimal_Filter_Known_Corr(transform_mtx, ...
+                                                        gfrft_mtx, igfrft_mtx, ...
+                                                        corr_xx, corr_xn, corr_nx, corr_nn, ...
+                                                        signal);
+            snrs(i_sigma, i_order) = Snr(signal, filtered_signal);
+            updateParallel();
+        end
+        inner_bar.release();
+        outer_bar([], [], []);
     end
-    inner_bar.release();
-    outer_bar([], [], []);
+    outer_bar.release();
+    ProgressBar.deleteAllTimers();
+
+    filename = sprintf("main-sensor-%s-%s.mat", strategy, normalization);
+    filename = strrep(filename, ' ', '-');
+    save(filename);
+    fprintf("\n\n\n");
 end
-outer_bar.release();
-ProgressBar.deleteAllTimers();
 
-figure;
-for i_sigma = 1:length(sigmas)
-    plot(fractional_orders, snrs(i_sigma, :), ...
-         'LineWidth', 2);
-    hold on;
-    grid on;
+if display
+    figure;
+    for i_sigma = 1:length(sigmas)
+        plot(fractional_orders, snrs(i_sigma, :), ...
+             'LineWidth', 2);
+        hold on;
+        grid on;
+    end
 end
 
 %% Functions

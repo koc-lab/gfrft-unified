@@ -48,7 +48,6 @@ file_id = fopen(output_path, 'w');
 knn_counts = results{1}.knn_counts;
 sigmas = results{1}.sigmas;
 
-
 %% Print Head
 fprintf(file_id, "\\begin{tabular}{@{}lr");
 for i = 1:(length(knn_counts) * length(sigmas))
@@ -86,7 +85,6 @@ for k_knn = 1:length(knn_counts)
     end
 end
 fprintf(file_id, "\\\\\\midrule\n");
-
 
 %% Print Body
 arma_orders = results{1}.arma_orders;
@@ -148,7 +146,6 @@ end
 fprintf(file_id, "\\bottomrule\n");
 fprintf(file_id, "\\end{tabular}\n");
 
-
 %% Helper Functions
 function [means, stds] = Get_Mean_Std_Pair(matrices_cell)
     matrices_combined = cat(ndims(matrices_cell{1}) + 1, matrices_cell{:});
@@ -197,4 +194,3 @@ function result = Abbreviation(input_str)
     % Combine the extracted characters into a new string
     result = strjoin(first_chars);
 end
-

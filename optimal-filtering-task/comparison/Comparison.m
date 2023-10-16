@@ -17,7 +17,6 @@ fractional_orders = -2.0:0.01:2.0;
 uncorrelated = true;
 
 %% Graph Generation
-seed = 0;
 dataset = "../../data/tv-graph-datasets/pm25-concentration.mat";
 dataset_title = "PM-25";
 knn_counts = [2, 5, 10];
@@ -48,13 +47,14 @@ median_snrs     = zeros(length(knn_counts), length(sigmas), length(median_orders
 gfrft_snrs      = zeros(length(knn_counts), length(sigmas), ...
                         length(gfrft_strategies), length(fractional_orders));
 
+for seed = 0:10
+fprintf("Generating results for seed: %d\n", seed);
 for k_knn_count = 1:length(knn_counts)
-    rng(seed);
-    gpurng(seed);
     knn_count = knn_counts(k_knn_count);
-
     [graph, signals] = Init_KNN_Real(dataset, knn_count, knn_sigma, ...
                                      max_node_count, max_time_instance, verbose);
+    rng(seed);
+    gpurng(seed);
     % signals = signals / max(signals(:));
     % signals = signals - mean(signals, 2);
     signals = Normalize_Zero_One(signals);
@@ -117,8 +117,9 @@ for k_knn_count = 1:length(knn_counts)
 end
 
 %% Save Results
-filename = sprintf("comparison-%s.mat", dataset_title);
+filename = sprintf("comparison-%s-seed-%d.mat", dataset_title, seed);
 save(filename);
+end
 
 %% Functions
 function noise = Generate_Noise(signal, sigma)

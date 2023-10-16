@@ -1,7 +1,7 @@
 % (c) Copyright 2023 Tuna Alikaşifoğlu
 
 %% Clear
-% clc;
+clc;
 clear;
 close all;
 
@@ -56,8 +56,7 @@ for k_knn_count = 1:length(knn_counts)
         mean_error = mean(gfrft_errors(k_knn_count, j_strategy, :));
         std_error = std(gfrft_errors(k_knn_count, j_strategy, :));
         max_error = max(gfrft_errors(k_knn_count, j_strategy, :));
-        % fprintf("%s: %e±%e (max: %e)\n", strategy, mean_error, std_error, max_error);
-        fprintf("%s\t: %e\n", strategy, mean_error);
+        fprintf("%s: %e±%e (max: %e)\n", strategy, mean_error, std_error, max_error);
     end
     fprintf("\n\n\n");
 end

@@ -15,17 +15,17 @@ function sampling_operator = Get_Optimal_Sampling_Operator(igfrft_mtx, num_sampl
     for iSample = 1:num_samples
         max_smallest_sv = -Inf;
         current_set = sampling_set(1:(iSample - 1), :);
-        for i = 1:N
-            if ~ismember(i, sampling_indices)
-                smallest_sv = svds([current_set; V_K(i, :)], 1, 'smallest');
-                if max_smallest_sv < smallest_sv
-                    max_smallest_sv = smallest_sv;
-                    idx = i;
-                end
-            end
+        candidate_indices = setdiff(1:N, sampling_indices(1:(iSample - 1)));
+
+        smallest_svs = zeros(length(candidate_indices), 1);
+        parfor i = 1:length(candidate_indices)
+            candidate_idx = candidate_indices(i);
+            smallest_svs(i) = svds([current_set; V_K(candidate_idx, :)], 1, 'smallest');
         end
-        sampling_indices(iSample) = idx;
-        sampling_set(iSample, :) = V_K(idx, :);
+        [~, idx] = max(smallest_svs);
+        selected_idx = candidate_indices(idx);
+        sampling_indices(iSample) = selected_idx;
+        sampling_set(iSample, :) = V_K(selected_idx, :);
     end
 
     sampling_operator = zeros(num_samples, N);

@@ -1,11 +1,12 @@
 % (c) Copyright 2023 Tuna Alikaşifoğlu
 
-function x_optimal = Logistic_Regressor(mtx, y, lrate, seed)
+function x_optimal = Logistic_Regressor(mtx, y, lrate, seed, tol)
     arguments
         mtx(:, :) {mustBeNumeric, Must_Be_Square_Matrix}
         y(:, 1) {mustBeNumeric}
         lrate(1, 1) {mustBeNumeric, mustBePositive} = 0.0001
         seed(1, 1) {mustBeInteger, mustBePositive} = 0
+        tol(1, 1) {mustBeNumeric, mustBePositive} = 1e-4
     end
     n = length(y);
     rng(seed);
@@ -13,7 +14,7 @@ function x_optimal = Logistic_Regressor(mtx, y, lrate, seed)
 
     loss_funct_new = Sigmoid_Logistic(mtx, x_optimal, y);
     dist = loss_funct_new;
-    while dist > 1e-5
+    while dist > tol
         x_optimal = x_optimal - lrate * (mtx' * (Sigmoid(mtx, x_optimal) - y));
         loss_function_old = loss_funct_new;
         loss_funct_new = Sigmoid_Logistic(mtx, x_optimal, y);

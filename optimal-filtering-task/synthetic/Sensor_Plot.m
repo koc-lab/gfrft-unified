@@ -63,7 +63,7 @@ for i_sigma = 1:length(sigmas)
     noisy_snr = Snr(signal, noisy_signal);
     fprintf("Noisy SNR: %.4f\n", noisy_snr);
 end
-return;
+return
 
 rng('default');
 gpurng('default');

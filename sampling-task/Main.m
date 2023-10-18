@@ -31,30 +31,29 @@ for i = 1:N
 end
 
 truths_result = zeros(length(sample_counts), length(fractional_orders), length(seeds));
-for t = 1:length(fractional_orders)
-    igfrft_mtx = GFRFT_Mtx(gft_mtx, -fractional_orders(t));
-    Vi = igfrft_mtx;
-    for z = 1:length(sample_counts)
-        K = sample_counts(z);
-        M = sample_counts(z);
-        V_K =  Vi(:, 1:K);
+for i_order = 1:length(fractional_orders)
+    igfrft_mtx = GFRFT_Mtx(gft_mtx, -fractional_orders(i_order));
+    for i_sample = 1:length(sample_counts)
+        K = sample_counts(i_sample);
+        M = sample_counts(i_sample);
+        V_K =  igfrft_mtx(:, 1:K);
 
+        tic;
         optimal_sampling_op = Get_Optimal_Sampling_Operator(igfrft_mtx, M, K);
+        toc;
         X_Mu = optimal_sampling_op * X_ground_truth;
         A_obt = real(optimal_sampling_op * V_K);
 
         x_gained = zeros(K, num_of_classes, length(seeds));
-        for i = 1:num_of_classes
+        for i_seed = 1:length(seeds)
             tic;
-            parfor iSeed = 1:length(seeds)
-                seed = seeds(iSeed);
-                x_gained(:, i, iSeed) = Logistic_Regressor(A_obt, X_Mu(:, i), learning_rate, seed);
+            parfor i = 1:num_of_classes
+                seed = seeds(i_seed);
+                x_gained(:, i, i_seed) = Logistic_Regressor(A_obt, X_Mu(:, i), learning_rate, seed);
             end
             toc;
-        end
 
-        for iSeed = 1:length(seeds)
-            x_rec = real(V_K * x_gained(:, :, iSeed));
+            x_rec = real(V_K * x_gained(:, :, i_seed));
             for i = 1:N
                 [~, ids] = max(x_rec(i, :));
                 x_rec(i, :) = zeros(1, num_of_classes);
@@ -66,12 +65,8 @@ for t = 1:length(fractional_orders)
                     truth = truth + 1;
                 end
             end
-            truths_result(z, t, iSeed) = truth;
+            truths_result(i_sample, i_order, i_seed) = truth;
         end
-
-        disp(z);
-        disp(t);
-        disp('sampling,order');
     end
 end
 

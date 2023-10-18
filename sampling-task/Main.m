@@ -78,7 +78,7 @@ for i_order = 1:length(fractional_orders)
 end
 order_bar.release();
 
-save('truths_result.mat', 'truths_result');
+save(['sampling-', datestr(now, 'yy-mm-dd-HH-MM'), '.mat']);
 
 %% Helper Functions
 function adjacency = Generate_Adjacency(img_final, k)

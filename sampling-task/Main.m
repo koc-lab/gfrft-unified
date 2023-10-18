@@ -14,6 +14,7 @@ learning_rate = 0.0001;
 fractional_orders = 0.9:0.1:1.1;
 sample_counts = [30, 50, 70];
 seeds = 1:5;
+tol = 1e-4;
 
 num_of_classes = 10;
 k = 12;
@@ -31,27 +32,30 @@ for i = 1:N
 end
 
 truths_result = zeros(length(sample_counts), length(fractional_orders), length(seeds));
+
+order_bar = ProgressBar(length(fractional_orders), 'Title', 'Order');
+order_bar.setup([], [], []);
 for i_order = 1:length(fractional_orders)
     igfrft_mtx = GFRFT_Mtx(gft_mtx, -fractional_orders(i_order));
+
+    sample_bar = ProgressBar(length(sample_counts), 'Title', 'Sample');
+    sample_bar.setup([], [], []);
     for i_sample = 1:length(sample_counts)
         K = sample_counts(i_sample);
         M = sample_counts(i_sample);
         V_K =  igfrft_mtx(:, 1:K);
 
-        tic;
         optimal_sampling_op = Get_Optimal_Sampling_Operator(igfrft_mtx, M, K);
-        toc;
         X_Mu = optimal_sampling_op * X_ground_truth;
         A_obt = real(optimal_sampling_op * V_K);
 
         x_gained = zeros(K, num_of_classes, length(seeds));
         for i_seed = 1:length(seeds)
-            tic;
             parfor i = 1:num_of_classes
                 seed = seeds(i_seed);
-                x_gained(:, i, i_seed) = Logistic_Regressor(A_obt, X_Mu(:, i), learning_rate, seed);
+                x_gained(:, i, i_seed) = Logistic_Regressor(A_obt, X_Mu(:, i), ...
+                                                            learning_rate, seed, tol);
             end
-            toc;
 
             x_rec = real(V_K * x_gained(:, :, i_seed));
             for i = 1:N
@@ -67,8 +71,12 @@ for i_order = 1:length(fractional_orders)
             end
             truths_result(i_sample, i_order, i_seed) = truth;
         end
+        sample_bar(1, [], []);
     end
+    sample_bar.release();
+    order_bar(1, [], []);
 end
+order_bar.release();
 
 save('truths_result.mat', 'truths_result');
 

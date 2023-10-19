@@ -1,12 +1,14 @@
 % (c) Copyright 2023 Tuna Alikaşifoğlu
 
-clear all;
-close all;
+%% Clear
 clc;
+clear;
+close all;
 
+%% Plotting the results
 load("./../sampling-23-10-19-01-15.mat");
 markers = ["d", "o", "."];
-figure;
+figure('units', 'normalized', 'outerposition', [0 0 1 1]);
 plts = [];
 colormap(flipud(parula)); % Cool blues to warm oranges
 for i_sample = 1:size(truths_result, 1)

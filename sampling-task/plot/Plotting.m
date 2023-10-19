@@ -19,9 +19,9 @@ for i_sample = 1:size(truths_result, 1)
     lower = means - stds;
 
     plt = plot(fractional_orders, means, ...
-               'LineWidth', 1.5, ...
+               'LineWidth', 2, ...
                'Marker', markers(i_sample), ...
-               'MarkerSize', 7);
+               'MarkerSize', 5);
     plts = [plts; plt];
     line_color = get(plt, 'Color');
     hold on;
@@ -29,7 +29,7 @@ for i_sample = 1:size(truths_result, 1)
     %      [upper, fliplr(lower)], line_color, 'FaceAlpha', 0.1);
     errorbar(fractional_orders, means, stds, ...)
              'LineStyle', 'none', ...
-             'LineWidth', 1.5, ...
+             'LineWidth', 1.2, ...
              'Color', line_color);
 end
 grid on;
@@ -38,7 +38,10 @@ legend_strs = cellfun(@(x) [num2str(x), ' samples'], ...
 legend(plts, legend_strs, 'Location', 'best');
 xlabel("Fractional order");
 ylabel("Accuracy ($\%$) ", "Interpreter", "latex");
-xlim([0.9, 1.1]);
-% for i = 1:15
-%     fontsize("increase");
-% end
+xlim([min(fractional_orders), max(fractional_orders)]);
+ylim([0.99 * min(0.1 * truths_result(:)), 1.01 * max(0.1 * truths_result(:))]);
+for i = 1:10
+    fontsize("increase");
+end
+ax = gca;
+exportgraphics(ax, 'sampling.eps');

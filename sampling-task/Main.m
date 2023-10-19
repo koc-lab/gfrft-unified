@@ -11,7 +11,7 @@ load lbl_final;
 
 %
 learning_rate = 0.0001;
-fractional_orders = 0.9:0.1:1.1;
+fractional_orders = 0.9:0.001:1.1;
 sample_counts = [30, 50, 70];
 seeds = 1:5;
 tol = 1e-4;

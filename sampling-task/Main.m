@@ -25,14 +25,12 @@ A = A / eigs(A, 1, 'lm');
 strategy = 'adjacency';
 [gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(A, strategy);
 
-truths_result = zeros(length(sample_counts), length(fractional_orders));
 X_ground_truth = zeros(N, num_of_classes);
 for i = 1:N
     X_ground_truth(i, lbl_final(i) + 1) = 1;
 end
 
 truths_result = zeros(length(sample_counts), length(fractional_orders), length(seeds));
-
 order_bar = ProgressBar(length(fractional_orders), 'Title', 'Order');
 order_bar.setup([], [], []);
 for i_order = 1:length(fractional_orders)

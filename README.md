@@ -4,7 +4,7 @@
 [![Styling, Metrics & Linting by miss_hit](https://img.shields.io/badge/Styling,%20Metrics%20%26%20Linting-miss_hit-blue)](https://misshit.org/)
 [![License](https://img.shields.io/github/license/koc-lab/gfrft-unified)](https://github.com/koc-lab/gfrft-unified/blob/main/LICENSE)
 
-According to the feedback of the reviewers, the _Graph Fractional Fourier Transform: A Unified Theory_ paper needed updates for the experiments. This repository contains the source code and will serve as documentation for the updated experiments.
+This repository contains the source code and will serve as documentation for the _Graph Fractional Fourier Transform: A Unified Theory_ paper submitted to _IEEE Transactions on Signal Processing_.
 
 ## Table of Contents
 

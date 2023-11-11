@@ -36,11 +36,13 @@ grid on;
 legend_strs = cellfun(@(x) [num2str(x), ' samples'], ...
                       num2cell(sample_counts), 'UniformOutput', false);
 legend(plts, legend_strs, 'Location', 'best');
-xlabel("Fractional order");
+xlabel("Fractional order", "Interpreter", "latex");
 ylabel("Accuracy ($\%$) ", "Interpreter", "latex");
 xlim([min(fractional_orders), max(fractional_orders)]);
 ylim([0.99 * min(0.1 * truths_result(:)), 1.01 * max(0.1 * truths_result(:))]);
-for i = 1:10
+xticks(0.9:0.02:1.1)
+yticks(50:2:80)
+for i = 1:14
     fontsize("increase");
 end
 ax = gca;

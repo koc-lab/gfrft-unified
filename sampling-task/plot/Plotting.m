@@ -46,4 +46,4 @@ for i = 1:14
     fontsize("increase");
 end
 ax = gca;
-exportgraphics(ax, 'sampling.eps');
+exportgraphics(ax, 'sampling.eps', 'Resolution', 300);

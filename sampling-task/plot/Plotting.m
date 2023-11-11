@@ -19,9 +19,9 @@ for i_sample = 1:size(truths_result, 1)
     lower = means - stds;
 
     plt = plot(fractional_orders, means, ...
-               'LineWidth', 2);%, ...
-               % 'Marker', markers(i_sample), ...
-               % 'MarkerSize', 5);
+               'LineWidth', 2); % , ...
+    % 'Marker', markers(i_sample), ...
+    % 'MarkerSize', 5);
     plts = [plts; plt];
     line_color = get(plt, 'Color');
     hold on;
@@ -40,8 +40,8 @@ xlabel("Fractional order", "Interpreter", "latex");
 ylabel("Accuracy ($\%$) ", "Interpreter", "latex");
 xlim([min(fractional_orders), max(fractional_orders)]);
 ylim([0.99 * min(0.1 * truths_result(:)), 1.01 * max(0.1 * truths_result(:))]);
-xticks(0.9:0.02:1.1)
-yticks(50:2:80)
+xticks(0.9:0.02:1.1);
+yticks(50:2:80);
 for i = 1:14
     fontsize("increase");
 end

@@ -2,7 +2,10 @@
 
 function Plot_Time_Size(power_durations, hyper_durations, ...
                         fractional_orders, sizes, gfrft_strategies)
-    marker_list = {'o', 's', 'd', '^', 'v', '>', '<', 'p', 'h'};
+    marker_list = {'o', '^', 'd', 'v', '>', '<', 'p', 'h'};
+    marker_size = 4;
+    line_width = 3;
+
     for i_strategy = 1:length(gfrft_strategies)
         power_vals = squeeze(power_durations(:, i_strategy, :, :));
         hyper_vals = squeeze(hyper_durations(:, i_strategy, :, :));
@@ -21,32 +24,40 @@ function Plot_Time_Size(power_durations, hyper_durations, ...
         plts = [];
         for j_order = 1:length(fractional_orders)
             marker = marker_list{j_order};
-            plt = plot(sizes, power_mean(:, j_order), 'r', ...
-                       'LineWidth', 2, ...
+            plt = errorbar(sizes, power_mean(:, j_order), power_std(:, j_order), ...
+                       'LineWidth', line_width, ...
                        'Marker', marker, ...
-                       'DisplayName', sprintf("Power, \\sigma = %.2f", fractional_orders(j_order)));
+                       'MarkerSize', marker_size, ...
+                       'DisplayName', sprintf("Power, $a$ = %.2f", fractional_orders(j_order)));
             plts = [plts; plt];
             hold on;
-
-            line_color = get(plt, 'Color');
-            fill([sizes, fliplr(sizes)], ...
-                 [power_upper(:, j_order).', fliplr(power_lower(:, j_order).')], ...
-                 line_color, 'FaceAlpha', 0.2);
         end
         for j_order = 1:length(fractional_orders)
             marker = marker_list{j_order};
-            plt = plot(sizes, hyper_mean(:, j_order), 'b', ...
-                       'LineWidth', 2, ...
+            plt = errorbar(sizes, hyper_mean(:, j_order), hyper_std(:, j_order), ...
+                       'LineWidth', line_width, ...
                        'Marker', marker, ...
-                       'DisplayName', sprintf("Hyper, \\sigma = %.2f", fractional_orders(j_order)));
+                       'MarkerSize', marker_size, ...
+                       'DisplayName', sprintf("Hyper, $a$ = %.2f", fractional_orders(j_order)));
             plts = [plts; plt];
             hold on;
-
-            line_color = get(plt, 'Color');
-            fill([sizes, fliplr(sizes)], ...
-                 [hyper_upper(:, j_order).', fliplr(hyper_lower(:, j_order).')], ...
-                 line_color, 'FaceAlpha', 0.2);
         end
-        legend(plts, 'Location', 'best');
+        set(gca, 'YScale', 'log');
+        legend(plts, 'Location', 'best', 'Interpreter', 'latex');
+        xlabel('Vertex Count, $N$', 'Interpreter', 'latex');
+        ylabel('Duration (seconds), $\log$-scale', 'Interpreter', 'latex');
+
+        xlim([40, 610]);
+        y_min = 0.9 * min([power_lower(:); hyper_lower(:)]);
+        y_max = 1.1 * max([power_upper(:); hyper_upper(:)]);
+        ylim([y_min, y_max]);
+        grid on;
+        grid minor;
+        for i = 1:8
+            fontsize("increase");
+        end
+        ax = gca;
+        filename = sprintf('time_%s.eps', gfrft_strategies{i_strategy});
+        exportgraphics(ax, filename, 'Resolution', 300);
     end
 end

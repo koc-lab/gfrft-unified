@@ -6,15 +6,10 @@ clear;
 close all;
 
 %% Experiment Parameters
-% GFRFT
-fractional_orders = -1.5:0.25:1.5;
-num_trials = 20;
-
-%% Graph Generation
 dataset_title = "swiss";
-% A = rand(100);
-G = gsp_swiss_roll(50);
-A = full(G.W);
+fractional_orders = [0.65, 1.45];
+sizes = [50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300];
+num_trials = 20;
 gfrft_strategies = ["adjacency", ...
                     "laplacian", ...
                     "row normalized adjacency", ...
@@ -30,42 +25,42 @@ else
     disp('Parallel pool already exists.');
 end
 
-power_durations = zeros(length(gfrft_strategies), ...
+power_durations = zeros(length(sizes), length(gfrft_strategies), ...
                         length(fractional_orders), num_trials);
-hyper_durations = zeros(length(gfrft_strategies), ...
+hyper_durations = zeros(length(sizes), length(gfrft_strategies), ...
                         length(fractional_orders), num_trials);
-elogm_durations = zeros(length(gfrft_strategies), ...
-                        length(fractional_orders), num_trials);
+for k_size = 1:length(sizes)
+    fprintf("Size: %d\n", sizes(k_size));
+    G = gsp_swiss_roll(sizes(k_size));
+    A = full(G.W);
+    for j_strategy = 1:length(gfrft_strategies)
+        strategy = gfrft_strategies(j_strategy);
+        [gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(A, strategy);
 
-for j_strategy = 1:length(gfrft_strategies)
-    strategy = gfrft_strategies(j_strategy);
-    [gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(A, strategy);
-
-    progBar = ProgressBar(length(fractional_orders), ...
-                          'IsParallel', true, ...
-                          'Title', 'Parallel Processing' ...
-                         );
-    progBar.setup([], [], []);
-    parfor i_order = 1:length(fractional_orders)
-        order = fractional_orders(i_order);
-        power_durations(j_strategy, i_order, :) = ...
-            Time_GFRFT_Mtx_Power(gft_mtx, order, num_trials);
-        hyper_durations(j_strategy, i_order, :) = ...
-            Time_GFRFT_Mtx_Hyper(gft_mtx, igft_mtx, order, num_trials);
-        elogm_durations(j_strategy, i_order, :) = ...
-            Time_GFRFT_Mtx_Explog(gft_mtx, order, num_trials);
-        updateParallel();
+        progBar = ProgressBar(length(fractional_orders), ...
+                              'IsParallel', true, ...
+                              'Title', 'Parallel Processing' ...
+                             );
+        progBar.setup([], [], []);
+        parfor i_order = 1:length(fractional_orders)
+            order = fractional_orders(i_order);
+            power_durations(k_size, j_strategy, i_order, :) = ...
+                Time_GFRFT_Mtx_Power(gft_mtx, order, num_trials);
+            hyper_durations(k_size, j_strategy, i_order, :) = ...
+                Time_GFRFT_Mtx_Hyper(gft_mtx, igft_mtx, order, num_trials);
+            updateParallel();
+        end
+        progBar.release();
     end
-    progBar.release();
+    fprintf("\n");
 end
-fprintf("\n");
 ProgressBar.deleteAllTimers();
 
 %% Save Results
-filename = sprintf("time-%s.mat", dataset_title);
+filename = sprintf("time-%s-%s.mat", dataset_title, datestr(now, 'yy-mm-dd-HH-MM'));
 save(filename);
-Plot_Time_Large(power_durations, hyper_durations, elogm_durations, ...
-                fractional_orders, gfrft_strategies);
+Plot_Time_Size(power_durations, hyper_durations, ...
+               fractional_orders, sizes, gfrft_strategies);
 
 %% Helper Functions
 function durations = Time_GFRFT_Mtx_Power(gft_mtx, order, num_trials)

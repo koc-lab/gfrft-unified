@@ -72,11 +72,11 @@ function durations = Time_GFRFT_Mtx_Power(gft_mtx, order, num_trials)
     end
 end
 
-function durations = Time_GFRFT_Mtx_Explog(gft_mtx, order, num_trials)
+function durations = Time_GFRFT_Mtx_Eigen(gft_mtx, order, num_trials)
     durations = zeros(1, num_trials);
     for i_dur = 1:length(durations)
         tic;
-        [gfrft_mtx, igfrft_mtx] = GFRFT_Mtx_Explog(gft_mtx, order);
+        [gfrft_mtx, igfrft_mtx] = GFRFT_Mtx_Eigen(gft_mtx, order);
         durations(i_dur) = toc;
     end
 end

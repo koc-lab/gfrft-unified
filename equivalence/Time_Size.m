@@ -6,15 +6,12 @@ clear;
 close all;
 
 %% Experiment Parameters
-dataset_title = "swiss";
-fractional_orders = [0.65, 1.45];
-sizes = [50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300];
+dataset_title = "sensor";
+% dataset_title = "swissroll";
+fractional_orders = [0.35, 0.80];
+sizes = 50:25:600;
 num_trials = 20;
-gfrft_strategies = ["adjacency", ...
-                    "laplacian", ...
-                    "row normalized adjacency", ...
-                    "symmetric normalized adjacency", ...
-                    "normalized laplacian"];
+gfrft_strategies = ["adjacency", "laplacian"];
 
 %% Parallel Pool
 pool = gcp('nocreate');
@@ -31,7 +28,8 @@ hyper_durations = zeros(length(sizes), length(gfrft_strategies), ...
                         length(fractional_orders), num_trials);
 for k_size = 1:length(sizes)
     fprintf("Size: %d\n", sizes(k_size));
-    G = gsp_swiss_roll(sizes(k_size));
+    G = gsp_sensor(sizes(k_size));
+    % G = gsp_swiss_roll(sizes(k_size));
     A = full(G.W);
     for j_strategy = 1:length(gfrft_strategies)
         strategy = gfrft_strategies(j_strategy);

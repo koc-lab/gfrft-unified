@@ -7,17 +7,14 @@ close all;
 
 %% Experiment Parameters
 % GFRFT
-fractional_orders = -1.5:0.1:1.5;
+fractional_orders = -1.0:0.1:1.0;
 num_trials = 20;
 sizes = [100, 200];
 
 %% Graph Generation
 dataset_title = "sensor";
-gfrft_strategies = ["adjacency", ...
-                    "laplacian", ...
-                    "row normalized adjacency", ...
-                    "symmetric normalized adjacency", ...
-                    "normalized laplacian"];
+% dataset_title = "swissroll";
+gfrft_strategies = ["adjacency", "laplacian"];
 
 %% Parallel Pool
 pool = gcp('nocreate');
@@ -35,6 +32,7 @@ hyper_durations = zeros(length(sizes), length(gfrft_strategies), ...
 
 for k_size = 1:length(sizes)
     graph = gsp_sensor(sizes(k_size));
+    % graph = gsp_swiss_roll(sizes(k_size));
     fprintf("Generating results for size %d ...\n", sizes(k_size));
     for j_strategy = 1:length(gfrft_strategies)
         strategy = gfrft_strategies(j_strategy);
@@ -53,7 +51,7 @@ end
 ProgressBar.deleteAllTimers();
 
 %% Save Results
-filename = sprintf("time-%s.mat", dataset_title);
+filename = sprintf("time-frac-%s.mat", dataset_title);
 save(filename);
 
 for k_size = 1:length(sizes)

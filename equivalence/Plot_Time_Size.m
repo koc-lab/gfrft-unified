@@ -47,7 +47,7 @@ function Plot_Time_Size(power_durations, hyper_durations, ...
         xlabel('Vertex Count, $N$', 'Interpreter', 'latex');
         ylabel('Duration (seconds), $\log$-scale', 'Interpreter', 'latex');
 
-        xlim([40, 610]);
+        xlim([min(sizes) - 10, max(sizes) + 10]);
         y_min = 0.9 * min([power_lower(:); hyper_lower(:)]);
         y_max = 1.1 * max([power_upper(:); hyper_upper(:)]);
         ylim([y_min, y_max]);

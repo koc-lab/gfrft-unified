@@ -29,6 +29,8 @@ power_durations = zeros(length(sizes), length(gfrft_strategies), ...
                         length(fractional_orders), num_trials);
 hyper_durations = zeros(length(sizes), length(gfrft_strategies), ...
                         length(fractional_orders), num_trials);
+eigen_durations = zeros(length(sizes), length(gfrft_strategies), ...
+                        length(fractional_orders), num_trials);
 for k_size = 1:length(sizes)
     fprintf("Size: %d\n", sizes(k_size));
     G = gsp_swiss_roll(sizes(k_size));
@@ -48,6 +50,8 @@ for k_size = 1:length(sizes)
                 Time_GFRFT_Mtx_Power(gft_mtx, order, num_trials);
             hyper_durations(k_size, j_strategy, i_order, :) = ...
                 Time_GFRFT_Mtx_Hyper(gft_mtx, igft_mtx, order, num_trials);
+            eigen_durations(k_size, j_strategy, i_order, :) = ...
+                Time_GFRFT_Mtx_Eigen(gft_mtx, order, num_trials);
             updateParallel();
         end
         progBar.release();
@@ -59,7 +63,7 @@ ProgressBar.deleteAllTimers();
 %% Save Results
 filename = sprintf("time-%s-%s.mat", dataset_title, datestr(now, 'yy-mm-dd-HH-MM'));
 save(filename);
-Plot_Time_Size(power_durations, hyper_durations, ...
+Plot_Time_Size(power_durations, hyper_durations, eigen_durations, ...
                fractional_orders, sizes, gfrft_strategies);
 
 %% Helper Functions

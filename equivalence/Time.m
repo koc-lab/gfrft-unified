@@ -49,7 +49,7 @@ for k_size = 1:length(sizes)
             hyper_durations(k_size, j_strategy, i_order, :) = ...
               Time_GFRFT_Mtx_Hyper(gft_mtx, igft_mtx, order, num_trials);
             eigen_durations(k_size, j_strategy, i_order, :) = ...
-              Time_GFRFT_Mtx_Eigen(gft_mtx, igft_mtx, order, num_trials);
+              Time_GFRFT_Mtx_Eigen(gft_mtx, order, num_trials);
         end
     end
     fprintf("\n");
@@ -61,7 +61,8 @@ filename = sprintf("time-%s.mat", dataset_title);
 save(filename);
 
 for k_size = 1:length(sizes)
-    Plot_Time(power_durations, hyper_durations, fractional_orders, k_size, 1);
+    Plot_Time(power_durations, hyper_durations, eigen_durations, ...
+              fractional_orders, k_size, 1);
 end
 
 %% Helper Functions

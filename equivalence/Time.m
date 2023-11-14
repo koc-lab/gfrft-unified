@@ -32,8 +32,6 @@ power_durations = zeros(length(sizes), length(gfrft_strategies), ...
                         length(fractional_orders), num_trials);
 hyper_durations = zeros(length(sizes), length(gfrft_strategies), ...
                         length(fractional_orders), num_trials);
-eigen_durations = zeros(length(sizes), length(gfrft_strategies), ...
-                        length(fractional_orders), num_trials);
 
 for k_size = 1:length(sizes)
     graph = gsp_sensor(sizes(k_size));
@@ -48,8 +46,6 @@ for k_size = 1:length(sizes)
               Time_GFRFT_Mtx_Power(gft_mtx, order, num_trials);
             hyper_durations(k_size, j_strategy, i_order, :) = ...
               Time_GFRFT_Mtx_Hyper(gft_mtx, igft_mtx, order, num_trials);
-            eigen_durations(k_size, j_strategy, i_order, :) = ...
-              Time_GFRFT_Mtx_Eigen(gft_mtx, order, num_trials);
         end
     end
     fprintf("\n");
@@ -61,7 +57,7 @@ filename = sprintf("time-%s.mat", dataset_title);
 save(filename);
 
 for k_size = 1:length(sizes)
-    Plot_Time(power_durations, hyper_durations, eigen_durations, ...
+    Plot_Time(power_durations, hyper_durations, ...
               fractional_orders, k_size, 1);
 end
 
@@ -71,15 +67,6 @@ function durations = Time_GFRFT_Mtx_Power(gft_mtx, order, num_trials)
     for i_dur = 1:length(durations)
         tic;
         [gfrft_mtx, igfrft_mtx] = GFRFT_Mtx(gft_mtx, order);
-        durations(i_dur) = toc;
-    end
-end
-
-function durations = Time_GFRFT_Mtx_Eigen(gft_mtx, order, num_trials)
-    durations = zeros(1, num_trials);
-    for i_dur = 1:length(durations)
-        tic;
-        [gfrft_mtx, igfrft_mtx] = GFRFT_Mtx_Eigen(gft_mtx, order);
         durations(i_dur) = toc;
     end
 end

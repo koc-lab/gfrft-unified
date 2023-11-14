@@ -1,6 +1,6 @@
 % (c) Copyright 2023 Tuna Alikaşifoğlu
 
-function Plot_Time_Size(power_durations, hyper_durations, eigen_durations, ...
+function Plot_Time_Size(power_durations, hyper_durations, ...
                         fractional_orders, sizes, gfrft_strategies)
     marker_list = {'o', '^', 'd', 'v', '>', '<', 'p', 'h'};
     marker_size = 4;
@@ -9,7 +9,6 @@ function Plot_Time_Size(power_durations, hyper_durations, eigen_durations, ...
     for i_strategy = 1:length(gfrft_strategies)
         power_vals = squeeze(power_durations(:, i_strategy, :, :));
         hyper_vals = squeeze(hyper_durations(:, i_strategy, :, :));
-        eigen_vals = squeeze(eigen_durations(:, i_strategy, :, :));
 
         figure;
         power_mean = mean(power_vals, ndims(power_vals));
@@ -21,11 +20,6 @@ function Plot_Time_Size(power_durations, hyper_durations, eigen_durations, ...
         hyper_std = std(hyper_vals, 0, ndims(power_vals));
         hyper_upper = hyper_mean + hyper_std;
         hyper_lower = hyper_mean - hyper_std;
-
-        eigen_mean = mean(eigen_vals, ndims(power_vals));
-        eigen_std = std(eigen_vals, 0, ndims(power_vals));
-        eigen_upper = eigen_mean + eigen_std;
-        eigen_lower = eigen_mean - eigen_std;
 
         plts = [];
         for j_order = 1:length(fractional_orders)
@@ -45,16 +39,6 @@ function Plot_Time_Size(power_durations, hyper_durations, eigen_durations, ...
                            'Marker', marker, ...
                            'MarkerSize', marker_size, ...
                            'DisplayName', sprintf("Hyper, $a$ = %.2f", fractional_orders(j_order)));
-            plts = [plts; plt];
-            hold on;
-        end
-        for j_order = 1:length(fractional_orders)
-            marker = marker_list{j_order};
-            plt = errorbar(sizes, eigen_mean(:, j_order), eigen_std(:, j_order), ...
-                           'LineWidth', line_width, ...
-                           'Marker', marker, ...
-                           'MarkerSize', marker_size, ...
-                           'DisplayName', sprintf("Eigen, $a$ = %.2f", fractional_orders(j_order)));
             plts = [plts; plt];
             hold on;
         end

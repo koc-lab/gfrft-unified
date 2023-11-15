@@ -10,7 +10,10 @@ function Plot_Time_Size(power_durations, hyper_durations, ...
         power_vals = squeeze(power_durations(:, i_strategy, :, :));
         hyper_vals = squeeze(hyper_durations(:, i_strategy, :, :));
 
-        figure;
+        fig = figure;
+        set(gcf, 'Units', 'centimeters');
+        set(gcf, 'Position', [0, 0, 17.78, 11])
+
         power_mean = mean(power_vals, ndims(power_vals));
         power_std = std(power_vals, 0, ndims(power_vals));
         power_upper = power_mean + power_std;
@@ -43,21 +46,29 @@ function Plot_Time_Size(power_durations, hyper_durations, ...
             hold on;
         end
         set(gca, 'YScale', 'log');
-        legend(plts, 'Location', 'best', 'Interpreter', 'latex');
-        xlabel('Vertex Count, $N$', 'Interpreter', 'latex');
-        ylabel('Duration (seconds), $\log$-scale', 'Interpreter', 'latex');
+        legend(plts, 'Location', 'southeast');
+        xlabel('Vertex Count, $N$');
+        ylabel('Duration (s)');
 
         xlim([min(sizes) - 10, max(sizes) + 10]);
+        xticks([0:100:600]);
+        yticks([1e-3, 1e-2, 1e-1, 1e0, 1e1]);
         y_min = 0.9 * min([power_lower(:); hyper_lower(:)]);
         y_max = 1.1 * max([power_upper(:); hyper_upper(:)]);
         ylim([y_min, y_max]);
         grid on;
         grid minor;
-        for i = 1:8
-            fontsize("increase");
-        end
+        % for i = 1:8
+        %     fontsize("increase");
+        % end
+
+        set(findall(fig,'-property','Box'),'Box','off') % optional
+        set(findall(fig, '-property', 'FontSize'), 'FontSize', 25);
+        set(findall(fig, '-property', 'Interpreter'), 'Interpreter', 'latex');
+        set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');
+
         ax = gca;
-        filename = sprintf('time_%s.eps', gfrft_strategies{i_strategy});
+        filename = sprintf('time_size_%s.eps', gfrft_strategies{i_strategy});
         exportgraphics(ax, filename, 'Resolution', 300);
     end
 end

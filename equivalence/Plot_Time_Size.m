@@ -12,7 +12,7 @@ function Plot_Time_Size(power_durations, hyper_durations, ...
 
         fig = figure;
         set(gcf, 'Units', 'centimeters');
-        set(gcf, 'Position', [0, 0, 17.78, 11])
+        set(gcf, 'Position', [0, 0, 17.78, 11]);
 
         power_mean = mean(power_vals, ndims(power_vals));
         power_std = std(power_vals, 0, ndims(power_vals));
@@ -62,7 +62,7 @@ function Plot_Time_Size(power_durations, hyper_durations, ...
         %     fontsize("increase");
         % end
 
-        set(findall(fig,'-property','Box'),'Box','off') % optional
+        set(findall(fig, '-property', 'Box'), 'Box', 'off'); % optional
         set(findall(fig, '-property', 'FontSize'), 'FontSize', 25);
         set(findall(fig, '-property', 'Interpreter'), 'Interpreter', 'latex');
         set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');

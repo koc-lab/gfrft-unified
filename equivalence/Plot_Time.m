@@ -7,11 +7,11 @@ function Plot_Time(power_durations, hyper_durations, ...
         hyper_vals = 1000 * squeeze(hyper_durations(size_index, strategy_index, :, :));
 
         power_mean = mean(power_vals, ndims(power_vals));
-        power_std = 0.5 * std(power_vals, 0, ndims(power_vals));
+        power_std = std(power_vals, 0, ndims(power_vals));
         power_upper = power_mean + power_std;
 
         hyper_mean = mean(hyper_vals, ndims(power_vals));
-        hyper_std = 0.5 * std(hyper_vals, 0, ndims(power_vals));
+        hyper_std = std(hyper_vals, 0, ndims(power_vals));
         hyper_upper = hyper_mean + hyper_std;
 
         fig = figure;
@@ -41,7 +41,7 @@ function Plot_Time(power_durations, hyper_durations, ...
         grid minor;
 
         set(gcf, 'Units', 'centimeters');
-        set(gcf, 'Position', [0, 0, 17.78, 3.5]);
+        set(gcf, 'Position', [0, 0, 17.78, 4]);
         set(findall(fig, '-property', 'Box'), 'Box', 'off'); % optional
         set(findall(fig, '-property', 'FontSize'), 'FontSize', 12);
         set(findall(fig, '-property', 'Interpreter'), 'Interpreter', 'latex');

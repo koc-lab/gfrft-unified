@@ -9,7 +9,7 @@ close all;
 vertex_count = 100;
 fractional_orders = 0:0.001:1;
 dataset_title = "sensor";
-gfrft_strategies = ["symmetric normalized adjacency", "normalized laplacian"];
+gfrft_strategies = ["row normalized adjacency", "normalized laplacian"];
 
 %% Parallel Pool
 pool = gcp('nocreate');

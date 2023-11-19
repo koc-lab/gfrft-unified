@@ -41,7 +41,7 @@ function Plot_Time(power_durations, hyper_durations, ...
         grid minor;
 
         set(gcf, 'Units', 'centimeters');
-        set(gcf, 'Position', [0, 0, 17.78, 4]);
+        set(gcf, 'Position', [0, 0, 17.78, 6]);
         set(findall(fig, '-property', 'Box'), 'Box', 'off'); % optional
         set(findall(fig, '-property', 'FontSize'), 'FontSize', 12);
         set(findall(fig, '-property', 'Interpreter'), 'Interpreter', 'latex');

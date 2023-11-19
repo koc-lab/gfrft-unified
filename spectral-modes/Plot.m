@@ -7,7 +7,7 @@ close all;
 
 %% Plot
 load('spectral-sensor.mat');
-desired_orders = [0, 0.35, 0.80, 1.00];
+desired_orders = [0, 0.25, 0.50, 0.75, 1.00];
 indices = zeros(1, length(desired_orders));
 for i_order = 1:length(desired_orders)
     indices(i_order) = find(abs(fractional_orders - desired_orders(i_order)) < eps, 1);
@@ -24,7 +24,7 @@ for j_strategy = 1:length(gfrft_strategies)
         x_min = min(graph_frequencies(j_strategy, :));
         x_max = max(graph_frequencies(j_strategy, :));
     end
-    y_max = ceil(max(abs(coefficents(:))));
+    y_max = 1.1 * max(abs(coefficents(:)));
     y_min = floor(min(abs(coefficents(:))));
 
     for i_index = indices

@@ -31,7 +31,7 @@ i_knn = 2;
 % i_sigma = 3;
 i_strategy = 5;
 
-figure;
+fig = figure;
 plts = [];
 for i_sigma = start:length(sigmas)
     values = squeeze(combined(i_knn, i_sigma, i_strategy, :, :)).';
@@ -40,19 +40,31 @@ for i_sigma = start:length(sigmas)
     upper = means + stds;
     lower = means - stds;
 
-    plt = plot(fractional_orders, means, 'LineWidth', 2.5);
+    plt = plot(fractional_orders, means, ...
+               'LineWidth', 2, ...
+               'DisplayName', sprintf("$\\sigma = %g$", sigmas(i_sigma)));
     plts = [plts; plt];
     line_color = get(plt, 'Color');
     hold on;
     fill([fractional_orders, fliplr(fractional_orders)], ...
-         [upper, fliplr(lower)], line_color, 'FaceAlpha', 0.2);
+         [upper, fliplr(lower)], line_color, ...
+         'FaceAlpha', 0.2, ...
+         'LineStyle', ':');
 end
 grid on;
-legend_strs = cellfun(@(x) ['\sigma = ', num2str(x)], ...
-                      num2cell(sigmas(start:end)), 'UniformOutput', false);
-legend(plts, legend_strs);
+grid minor;
+legend(plts, 'Orientation', 'horizontal', 'Location', 'best');
 xlabel('Fractional Order $a$', 'interpreter', 'latex');
 ylabel('SNR (dB)', 'interpreter', 'latex');
-for i = 1:15
-    fontsize("increase");
-end
+xticks(-2:0.5:2);
+
+set(gcf, 'Units', 'centimeters');
+set(gcf, 'Position', [0, 0, 17.78, 10.5]);
+set(findall(fig, '-property', 'Box'), 'Box', 'off'); % optional
+set(findall(fig, '-property', 'FontSize'), 'FontSize', 16);
+set(findall(fig, '-property', 'Interpreter'), 'Interpreter', 'latex');
+set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');
+
+ax = gca;
+filename = sprintf('order_plot.eps');
+exportgraphics(ax, filename, 'Resolution', 300);

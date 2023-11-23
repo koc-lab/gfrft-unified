@@ -54,16 +54,19 @@ end
 grid on;
 grid minor;
 legend(plts, 'Orientation', 'horizontal', 'Location', 'best');
+% lgd = legend(plts, 'Orientation', 'horizontal', 'Location', 'none');
+% set(lgd, 'Position', [0.32, 0.7, 0.4, 0.1]);
 xlabel('Fractional Order $a$', 'interpreter', 'latex');
 ylabel('SNR (dB)', 'interpreter', 'latex');
-xticks(-2:0.5:2);
+xticks(-2:1:2);
 
 set(gcf, 'Units', 'centimeters');
 set(gcf, 'Position', [0, 0, 17.78, 10.5]);
 set(findall(fig, '-property', 'Box'), 'Box', 'off'); % optional
-set(findall(fig, '-property', 'FontSize'), 'FontSize', 16);
+set(findall(fig, '-property', 'FontSize'), 'FontSize', 25);
 set(findall(fig, '-property', 'Interpreter'), 'Interpreter', 'latex');
 set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');
+% set(lgd,'FontSize',16);
 
 ax = gca;
 filename = sprintf('order_plot.eps');

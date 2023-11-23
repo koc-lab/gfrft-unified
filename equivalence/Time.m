@@ -9,7 +9,7 @@ close all;
 % GFRFT
 fractional_orders = -1.0:0.1:1.0;
 num_trials = 20;
-sizes = [100, 200];
+sizes = [100, 200, 300, 400, 500, 600];
 
 %% Graph Generation
 dataset_title = "sensor";
@@ -38,20 +38,27 @@ for k_size = 1:length(sizes)
         strategy = gfrft_strategies(j_strategy);
         [gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(full(graph.W), strategy);
 
+        progBar = ProgressBar(length(fractional_orders), ...
+                              'IsParallel', true, ...
+                              'Title', 'Parallel Processing' ...
+                             );
+        progBar.setup([], [], []);
         parfor i_order = 1:length(fractional_orders)
             order = fractional_orders(i_order);
             power_durations(k_size, j_strategy, i_order, :) = ...
               Time_GFRFT_Mtx_Power(gft_mtx, order, num_trials);
             hyper_durations(k_size, j_strategy, i_order, :) = ...
               Time_GFRFT_Mtx_Hyper(gft_mtx, igft_mtx, order, num_trials);
+            updateParallel();
         end
+        progBar.release();
     end
     fprintf("\n");
 end
 ProgressBar.deleteAllTimers();
 
 %% Save Results
-filename = sprintf("time-frac-%s.mat", dataset_title);
+filename = sprintf("time-frac-%s-%s.mat", dataset_title, datestr(now, 'yy-mm-dd-HH-MM'));
 save(filename);
 
 for k_size = 1:length(sizes)

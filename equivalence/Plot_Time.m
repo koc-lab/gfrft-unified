@@ -34,7 +34,7 @@ function Plot_Time(power_durations, hyper_durations, ...
         xticks(fractional_orders(1:2:end));
         if size_index == 1
             yticks([0, 25, 50]);
-        else
+        elseif size_index == 2
             yticks([0, 100, 200]);
         end
         grid on;

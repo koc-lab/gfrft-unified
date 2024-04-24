@@ -9,6 +9,9 @@ python = ">=3.10,<3.12"
 torch = "^2.0.0"
 pyzmq = "26.0.0"
 torch-gfrft = {git = "https://github.com/tunakasif/torch-gfrft.git"}
+scipy = "^1.13.0"
+pygsp = "^0.5.1"
+matplotlib = "^3.8.4"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.0"
@@ -16,6 +19,7 @@ mypy = "^1.6.1"
 pytest = "^7.4.3"
 ipykernel = "^6.26.0"
 ipython = "^8.18.0"
+ipywidgets = "^8.1.2"
 
 [tool.ruff]
 line-length = 100

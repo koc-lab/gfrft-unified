@@ -11,6 +11,23 @@ class Real(nn.Module):
         return x.real
 
 
+class TrainableDiagonalFilter(nn.Module):
+    def __init__(self, size: int) -> None:
+        super().__init__()
+        self.size = size
+        self.device = None
+        self.filter = nn.Parameter(torch.randn(size, dtype=torch.float32))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        if self.device is None:
+            self.device = x.device
+            self.filter.data = self.filter.data.type(x.dtype).to(self.device)
+        return torch.matmul(torch.diag(self.filter), x)
+
+    def __repr__(self) -> str:
+        return f"LearnableDiagonalFilter(size={self.size})"
+
+
 class IdealLowpassFilter(nn.Module):
     def __init__(self, size: int, cutoff_count: int) -> None:
         if cutoff_count >= size or cutoff_count < 0:
@@ -38,19 +55,25 @@ class GFRFTFilterLayer(nn.Module):
         cutoff_count: int,
         order: float = 1.0,
         *,
-        trainable: bool = True,
+        trainable_transform: bool = True,
+        trainable_filter: bool = False,
     ) -> None:
         super().__init__()
         self.gfrft = gfrft
         self.cutoff_count = cutoff_count
+        self.trainable_filter = trainable_filter
         self.order = nn.Parameter(
             torch.tensor(order, dtype=torch.float32),
-            requires_grad=trainable,
+            requires_grad=trainable_transform,
         )
-        self.filter = IdealLowpassFilter(gfrft._eigvals.size(0), cutoff_count)
+        if trainable_filter:
+            self.filter = TrainableDiagonalFilter(gfrft._eigvals.size(0))
+        else:
+            self.filter = IdealLowpassFilter(gfrft._eigvals.size(0), cutoff_count)
 
     def __repr__(self) -> str:
-        return f"GFRFTFilter(order={self.order.item()}, cutoff={self.cutoff_count})"
+        filter_info = "trainable" if self.trainable_filter else f"cutoff={self.cutoff_count}"
+        return f"GFRFTFilter(order={self.order.item()}, filter={filter_info})"
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.gfrft.gfrft(x, self.order, dim=0)

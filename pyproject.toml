@@ -20,6 +20,7 @@ pytest = "^7.4.3"
 ipykernel = "^6.26.0"
 ipython = "^8.18.0"
 ipywidgets = "^8.1.2"
+hypothesis = "^6.100.1"
 
 [tool.ruff]
 line-length = 100
@@ -41,9 +42,10 @@ extend-select = [
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
-"tests/*" = ["S101"]
+"/**/tests/*" = ["S101"]
 
 [tool.pytest.ini_options]
+testpaths = ["trainable/tests"]
 filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.mypy]

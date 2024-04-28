@@ -71,3 +71,10 @@ def init_knn_from_mat(
         )
         graph.plot()
     return graph, adjacency, jtv_signal
+
+
+def complex_round(x: torch.Tensor, decimals: int = 0) -> torch.Tensor:
+    if x.is_complex():
+        return x.real.round(decimals=decimals) + 1j * x.imag.round(decimals=decimals)
+    else:
+        return x.round(decimals=decimals)

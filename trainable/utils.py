@@ -19,6 +19,8 @@ def seed_everything(seed: int) -> None:
         os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 
 
+def snr(signal: torch.Tensor, noise: torch.Tensor) -> torch.Tensor:
+    return 20 * torch.log10(torch.norm(signal) / torch.norm(noise))
 
 
 def mse_loss(predictions: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:

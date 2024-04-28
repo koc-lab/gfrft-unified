@@ -44,7 +44,8 @@ def init_knn_from_mat(
     max_time_length: int | None = None,
     device: torch.device | None = None,
     verbose: bool = False,
-) -> tuple[torch.Tensor, torch.Tensor]:
+    dtype: torch.dtype = torch.float64,
+) -> tuple[NNGraph, torch.Tensor, torch.Tensor]:
     dataset = loadmat(dataset_path)
     if "data" not in dataset.keys() or "position" not in dataset.keys():
         raise ValueError("Invalid dataset format")
@@ -61,12 +62,12 @@ def init_knn_from_mat(
     else:
         graph = NNGraph(position, k=knn_count, sigma=knn_sigma)
 
-    jtv_signal = torch.tensor(jtv_signal, dtype=torch.float32, device=device)
-    adjacency = torch.tensor(graph.W.todense(), dtype=torch.float32, device=device)
+    jtv_signal = torch.tensor(jtv_signal, dtype=dtype, device=device)
+    adjacency = torch.tensor(graph.W.todense(), dtype=dtype, device=device)
     if verbose:
         print(
             f"Dataset Info:\n\tname: {dataset_path.stem}\n\t"
             f"node count: {jtv_signal.shape[0]}\n\ttime length: {jtv_signal.shape[1]}"
         )
         graph.plot()
-    return adjacency, jtv_signal
+    return graph, adjacency, jtv_signal

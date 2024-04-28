@@ -19,12 +19,10 @@ def seed_everything(seed: int) -> None:
         os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 
 
-def rmse_loss(predictions: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
-    return torch.sqrt(torch.mean((predictions - targets) ** 2))
 
 
 def mse_loss(predictions: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
-    return torch.norm(predictions - targets, p="fro", dim=0).mean()
+    return torch.mean(torch.abs(predictions - targets) ** 2)
 
 
 def add_gaussian_noise(

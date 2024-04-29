@@ -61,6 +61,7 @@ class GFRFTFilterLayer(nn.Module):
         super().__init__()
         self.gfrft = gfrft
         self.cutoff_count = cutoff_count
+        self.trainable_transform = trainable_transform
         self.trainable_filter = trainable_filter
         self.order = nn.Parameter(
             torch.tensor(order, dtype=torch.float32),
@@ -72,8 +73,9 @@ class GFRFTFilterLayer(nn.Module):
             self.filter = IdealLowpassFilter(gfrft._eigvals.size(0), cutoff_count)
 
     def __repr__(self) -> str:
+        transform_info = "trainable" if self.trainable_transform else "fixed"
         filter_info = "trainable" if self.trainable_filter else f"cutoff={self.cutoff_count}"
-        return f"GFRFTFilter(order={self.order.item()}, filter={filter_info})"
+        return f"GFRFTFilter(order={self.order.item()} ({transform_info}), filter={filter_info})"
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.gfrft.gfrft(x, self.order, dim=0)

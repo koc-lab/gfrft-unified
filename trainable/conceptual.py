@@ -4,7 +4,8 @@ import torch as th
 import torch.nn as nn
 from filtering import GFRFTFilterLayer, Real
 from torch_gfrft.gfrft import GFRFT
-from utils import mse_loss, seed_everything
+from tqdm.auto import tqdm
+from utils import mse_loss, seed_everything, snr
 
 
 def generate_bandlimited_jtv_signal(
@@ -90,14 +91,19 @@ def experiment(
     noisy_signal = jtv_signal + jtv_noise
 
     initial_loss = mse_loss(noisy_signal, jtv_signal)
-    print(f"Epoch {0:4d} | Loss {initial_loss.item(): >8.4f}")
-    for epoch in range(1, 1 + epochs):
+    initial_snr = snr(jtv_signal, jtv_noise)
+    pbar = tqdm(
+        range(1, 1 + epochs),
+        desc=f"Training | Loss {initial_loss.item(): >8.4f} | SNR {initial_snr: >8.4f}",
+    )
+    for _ in pbar:
         optim.zero_grad()
-        output = mse_loss(model(noisy_signal), jtv_signal)
-        if epoch in display_epochs:
-            print(f"Epoch {epoch:4d} | Loss {output.item(): >8.4f}")
+        estimated = model(noisy_signal)
+        output = mse_loss(estimated, jtv_signal)
+        estimated_snr = snr(jtv_signal, estimated - jtv_signal)
         if not (trainable_transform or trainable_filter):
             break
+        pbar.set_description(f"Training | Loss {output.item(): >8.4f} | SNR {estimated_snr: >8.4f}")
         output.backward()
         optim.step()
     return model

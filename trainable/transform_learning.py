@@ -59,7 +59,7 @@ def experiment(
         output = mse_loss(model(original_signals), transformed_signals)
         if epoch in display_epochs:
             info = get_order_info(model, show_sum=show_sum_during_training)
-            print(f"Epoch {epoch:4d} | Loss {output.item(): >8.4f} | {info}")
+            print(f"Epoch {epoch:4d} | Loss {output.item(): >8.2e} | {info}")
         output.backward()
         optim.step()
     print("-" * len(start_str))

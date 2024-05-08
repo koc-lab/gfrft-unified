@@ -6,6 +6,7 @@ clear;
 close all;
 
 %% Experiment Parameters
+use_spectral_ones = false;
 vertex_count = 100;
 fractional_orders = 0:0.001:1;
 dataset_title = "sensor";
@@ -26,7 +27,12 @@ graph_frequencies = zeros(length(gfrft_strategies), vertex_count);
 for j_strategy = 1:length(gfrft_strategies)
     strategy = gfrft_strategies(j_strategy);
     [gft_mtx, igft_mtx, graph_freqs] = Get_GFT_With_Strategy(full(graph.W), strategy);
-    graph_signal = gft_mtx * ones(vertex_count, 1);
+    if use_spectral_ones
+        graph_signal = gft_mtx * ones(vertex_count, 1);
+    else
+        graph_signal = zeros(vertex_count, 1);
+        graph_signal(1) = 1;
+    end
     graph_frequencies(j_strategy, :) = graph_freqs;
     parfor i_order = 1:length(fractional_orders)
         order = fractional_orders(i_order);

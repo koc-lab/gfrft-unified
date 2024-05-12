@@ -94,7 +94,7 @@ def experiment(
     initial_snr = snr(jtv_signal, jtv_noise)
     pbar = tqdm(
         range(1, 1 + epochs),
-        desc=f"Training | Loss {initial_loss.item(): >8.4f} | SNR {initial_snr: >8.4f}",
+        desc=f"Initial Loss {initial_loss.item():.4g} | SNR {initial_snr:.4g}",
     )
     for _ in pbar:
         optim.zero_grad()
@@ -103,7 +103,11 @@ def experiment(
         estimated_snr = snr(jtv_signal, estimated - jtv_signal)
         if not (trainable_transform or trainable_filter):
             break
-        pbar.set_description(f"Training | Loss {output.item(): >8.4f} | SNR {estimated_snr: >8.4f}")
+        pbar.set_postfix(
+            train_loss=f"{output.item():.4g}",
+            estimated_snr=f"{estimated_snr:.4g}",
+            order=f"{filters[0].order.item():.4g}",
+        )
         output.backward()
         optim.step()
     return model

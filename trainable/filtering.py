@@ -16,7 +16,7 @@ class TrainableDiagonalFilter(nn.Module):
         super().__init__()
         self.size = size
         self.device = None
-        self.filter = nn.Parameter(torch.randn(size))
+        self.filter = nn.Parameter(torch.ones(size))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         if self.device is None:

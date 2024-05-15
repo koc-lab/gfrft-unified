@@ -1,6 +1,7 @@
 import os
 import random
 from pathlib import Path
+from typing import Callable
 
 import numpy as np
 import torch
@@ -71,6 +72,14 @@ def init_knn_from_mat(
         )
         graph.plot()
     return graph, adjacency, jtv_signal
+
+
+def sort_graph_and_jtv(
+    graph: NNGraph, adjacency: torch.Tensor, signal: torch.Tensor, sort_func: Callable
+) -> tuple[NNGraph, torch.Tensor, torch.Tensor]:
+    idx, new_coords = zip(*sorted(enumerate(graph.coords), key=lambda t: sort_func(t[1])))
+    new_graph = NNGraph(new_coords, k=graph.k, sigma=graph.k)
+    return new_graph, adjacency[idx, ...][..., idx], signal[idx, ...]
 
 
 def complex_round(x: torch.Tensor, decimals: int = 0) -> torch.Tensor:

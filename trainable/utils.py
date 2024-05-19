@@ -87,3 +87,19 @@ def complex_round(x: torch.Tensor, decimals: int = 0) -> torch.Tensor:
         return x.real.round(decimals=decimals) + 1j * x.imag.round(decimals=decimals)
     else:
         return x.round(decimals=decimals)
+
+
+def get_inverse_degrees(matrix: torch.Tensor) -> torch.Tensor:
+    out_degrees = matrix.sum(dim=-1)
+    inverse_degrees = torch.zeros_like(out_degrees)
+    non_zero_indices = out_degrees != 0
+    inv_values = torch.reciprocal(out_degrees[non_zero_indices])
+    inverse_degrees = inverse_degrees.type(inv_values.dtype)
+    inverse_degrees[non_zero_indices] = inv_values
+    return inverse_degrees
+
+
+def symmetric_degree_normalize(matrix: torch.Tensor) -> torch.Tensor:
+    inverse_degrees = get_inverse_degrees(matrix)
+    sqrt_inverse_degrees = torch.sqrt(inverse_degrees)
+    return torch.einsum("i,ij,j->ij", sqrt_inverse_degrees, matrix, sqrt_inverse_degrees)

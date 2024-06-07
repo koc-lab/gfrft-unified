@@ -58,8 +58,8 @@ function Plot_Time_Size(power_durations, hyper_durations, ...
         end
         set(gca, 'YScale', 'log');
         legend(plts, 'Location', 'southeast');
-        xlabel('Vertex Count, $N$');
-        ylabel('Duration (s)');
+        xlabel('\textbf{Vertex Count,} \boldmath$N$');
+        ylabel('\textbf{Duration (s)}');
 
         xlim([min(sizes) - 10, max(sizes) + 10]);
         xticks([0:100:600]);
@@ -69,10 +69,11 @@ function Plot_Time_Size(power_durations, hyper_durations, ...
         ylim([y_min, y_max]);
         grid on;
         grid minor;
+        set(gca, 'FontWeight', 'bold', 'FontSize', 28);
         set(findall(fig, '-property', 'Box'), 'Box', 'off'); % optional
-        set(findall(fig, '-property', 'FontSize'), 'FontSize', 25);
+        set(findall(fig, '-property', 'FontSize'), 'FontSize', 28);
         set(findall(fig, '-property', 'Interpreter'), 'Interpreter', 'latex');
-        set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');
+        % set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');
 
         ax = gca;
         filename = sprintf('time_size_%.2f.eps', fractional_orders(j_order));

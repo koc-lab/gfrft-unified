@@ -36,8 +36,8 @@ for j_strategy = 1:length(gfrft_strategies)
         stem(x, y, 'filled');
         xlim([x_min - 0.1, x_max + 0.1]);
         ylim([y_min, y_max]);
-        xlabel("Frequency, $\lambda$", 'Interpreter', 'latex');
-        ylabel("Magnitudes, $|\alpha|$", 'Interpreter', 'latex');
+        xlabel("\textbf{Frequency,} \boldmath$\lambda$", 'Interpreter', 'latex');
+        ylabel("\textbf{Magnit.}, \boldmath$|\alpha|$", 'Interpreter', 'latex');
         xticks(x_min:0.4:x_max);
         yticks([1, 5, 10]);
         grid on;
@@ -45,10 +45,11 @@ for j_strategy = 1:length(gfrft_strategies)
 
         set(gcf, 'Units', 'centimeters');
         set(gcf, 'Position', [10, 10, 17.78, 8]);
+        set(gca, 'FontWeight', 'bold', 'FontSize', 26);
         set(findall(fig, '-property', 'Box'), 'Box', 'off'); % optional
-        set(findall(fig, '-property', 'FontSize'), 'FontSize', 24);
+        set(findall(fig, '-property', 'FontSize'), 'FontSize', 26);
         set(findall(fig, '-property', 'Interpreter'), 'Interpreter', 'latex');
-        set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');
+        % set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');
 
         pause(0.1);
         ax = gca;

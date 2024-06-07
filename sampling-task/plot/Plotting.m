@@ -39,22 +39,23 @@ grid minor;
 legend_strs = cellfun(@(x) [num2str(x), ' samples'], ...
                       num2cell(sample_counts), 'UniformOutput', false);
 legend(plts, legend_strs, 'Location', 'south');
-xlabel("Fractional order", "Interpreter", "latex");
-ylabel("Accuracy ($\%$) ", "Interpreter", "latex");
+xlabel("\textbf{Fractional order}", "Interpreter", "latex");
+ylabel("\textbf{Accuracy} (\boldmath$\%$)", "Interpreter", "latex");
 xlim([min(fractional_orders), max(fractional_orders)]);
 ylim([0.99 * min(0.1 * truths_result(:)), 1.01 * max(0.1 * truths_result(:))]);
 xticks(0.9:0.05:1.1);
-yticks(50:2:80);
+yticks(50:3:80);
 % for i = 1:14
 %     fontsize("increase");
 % end
 
 set(gcf, 'Units', 'centimeters');
 set(gcf, 'Position', [0, 0, 17.78, 10]);
+set(gca, 'FontWeight', 'bold', 'FontSize', 22);
 set(findall(fig, '-property', 'Box'), 'Box', 'off'); % optional
-set(findall(fig, '-property', 'FontSize'), 'FontSize', 18);
+set(findall(fig, '-property', 'FontSize'), 'FontSize', 22);
 set(findall(fig, '-property', 'Interpreter'), 'Interpreter', 'latex');
-set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');
+% set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');
 
 ax = gca;
 exportgraphics(ax, 'sampling.eps', 'Resolution', 300);

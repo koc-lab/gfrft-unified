@@ -28,9 +28,9 @@ function Plot_Time(power_durations, hyper_durations, ...
 
         max_val = max(max(power_upper), max(hyper_upper));
         ylim([0, 1.3 * max_val]);
-        xlabel("Fractional Order");
-        ylabel("Duration (ms)");
-        legend(["Power", "Hyper"], 'Orientation', 'horizontal');
+        xlabel("\textbf{Fractional Order}");
+        ylabel("\textbf{Duration (ms)}");
+        legend(["\textbf{Power}", "\textbf{Hyper}"], 'Orientation', 'horizontal');
         xticks(fractional_orders(1:2:end));
         if size_index == 1
             yticks([0, 25, 50]);
@@ -42,10 +42,11 @@ function Plot_Time(power_durations, hyper_durations, ...
 
         set(gcf, 'Units', 'centimeters');
         set(gcf, 'Position', [0, 0, 17.78, 5]);
+        set(gca, 'FontWeight', 'bold', 'FontSize', 15);
         set(findall(fig, '-property', 'Box'), 'Box', 'off'); % optional
-        set(findall(fig, '-property', 'FontSize'), 'FontSize', 12);
+        set(findall(fig, '-property', 'FontSize'), 'FontSize', 15);
         set(findall(fig, '-property', 'Interpreter'), 'Interpreter', 'latex');
-        set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');
+        % set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');
 
         ax = gca;
         filename = sprintf('time_frac_n%d.eps', sizes(size_index));

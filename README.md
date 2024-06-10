@@ -4,7 +4,7 @@
 [![Styling, Metrics & Linting by miss_hit](https://img.shields.io/badge/Styling,%20Metrics%20%26%20Linting-miss_hit-blue)](https://misshit.org/)
 [![License](https://img.shields.io/github/license/koc-lab/gfrft-unified)](https://github.com/koc-lab/gfrft-unified/blob/main/LICENSE)
 
-This repository contains the source code and will serve as documentation for the _Graph Fractional Fourier Transform: A Unified Theory_ paper submitted to _IEEE Transactions on Signal Processing_.
+This repository contains the source code and will serve as documentation for the _Graph Fractional Fourier Transform: A Unified Theory_ paper submitted to _IEEE Transactions on Signal Processing_. The trainable graph fractional Fourier transform is provided as a standalone installable package in its own GitHub Page: [tunakasif/torch-gfrft](https://github.com/tunakasif/torch-gfrft).
 
 ## Table of Contents
 

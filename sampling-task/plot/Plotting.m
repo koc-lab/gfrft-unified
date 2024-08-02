@@ -51,9 +51,9 @@ yticks(50:3:80);
 
 set(gcf, 'Units', 'centimeters');
 set(gcf, 'Position', [0, 0, 17.78, 10]);
-set(gca, 'FontWeight', 'bold', 'FontSize', 22);
+set(gca, 'FontWeight', 'bold', 'FontSize', 16);
 set(findall(fig, '-property', 'Box'), 'Box', 'off'); % optional
-set(findall(fig, '-property', 'FontSize'), 'FontSize', 22);
+set(findall(fig, '-property', 'FontSize'), 'FontSize', 16);
 set(findall(fig, '-property', 'Interpreter'), 'Interpreter', 'latex');
 % set(findall(fig, '-property', 'TickLabelInterpreter'), 'TickLabelInterpreter', 'latex');
 

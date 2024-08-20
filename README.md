@@ -4,7 +4,7 @@
 [![Styling, Metrics & Linting by miss_hit](https://img.shields.io/badge/Styling,%20Metrics%20%26%20Linting-miss_hit-blue)](https://misshit.org/)
 [![License](https://img.shields.io/github/license/koc-lab/gfrft-unified)](https://github.com/koc-lab/gfrft-unified/blob/main/LICENSE)
 
-This repository contains the source code and will serve as documentation for the _Graph Fractional Fourier Transform: A Unified Theory_ paper submitted to _IEEE Transactions on Signal Processing_. The trainable graph fractional Fourier transform is provided as a standalone installable package in its own GitHub Page: [tunakasif/torch-gfrft](https://github.com/tunakasif/torch-gfrft).
+This repository contains the source code and will serve as documentation for the [Graph Fractional Fourier Transform: A Unified Theory](https://doi.org/10.1109/TSP.2024.3439211) paper published in _IEEE Transactions on Signal Processing_. The trainable graph fractional Fourier transform is provided as a standalone installable package on its own GitHub Page: [tunakasif/torch-gfrft](https://github.com/tunakasif/torch-gfrft).
 
 ## Table of Contents
 
@@ -17,7 +17,7 @@ This repository contains the source code and will serve as documentation for the
 ## Dependencies
 
 1. EPFL's _Graph Signal Processing Toolbox_ (`gspbox`): see [GitHub](https://github.com/epfl-lts2/gspbox) and [documentation](https://epfl-lts2.github.io/gspbox-html/) pages.
-    - The project assumes the `gspbox` directory is present in the root of the project, and compiled according to the directives presented in the [documentation](https://epfl-lts2.github.io/gspbox-html/download.html).
+    - The project assumes the `gspbox` directory is present in the root of the project and compiled according to the directives presented in the [documentation](https://epfl-lts2.github.io/gspbox-html/download.html).
     - If you already have a way to include `gspbox` in your path, then you can ignore this. However, if you want to download the code with its `gspbox` dependency, you need to use `--recursive` option while cloning, e.g.,
 
         ```sh
@@ -38,13 +38,13 @@ This repository contains the source code and will serve as documentation for the
 
 1. Clone the repository
    - If you want the `gspbox` as a submodule, clone recursively (see [Dependencies](#dependencies) section).
-2. Install `gspbox` dependency, by entering `gspbox` directory in MATLAB prompt, and running the following command (see the [documentation](https://epfl-lts2.github.io/gspbox-html/download.html) for further details):
+2. Install `gspbox` dependency by entering `gspbox` directory in the MATLAB prompt and running the following command (see the [documentation](https://epfl-lts2.github.io/gspbox-html/download.html) for further details):
 
     ```matlab
     gsp_start; gsp_make; gsp_install;
     ```
 
-3. Install `CVX` dependency, by installing the pre-built archive for your operating system and extracting it. Then, by entering `cvx` directory in the MATLAB prompt, run the following command, and _do not try to manually add the directory to the path_ (see the [documentation](http://web.cvxr.com/cvx/doc/install.html) for further details):
+3. Install `CVX` dependency by installing the pre-built archive for your operating system and extracting it. Then, by entering `cvx` directory in the MATLAB prompt, run the following command, and _do not try to manually add the directory to the path_ (see the [documentation](http://web.cvxr.com/cvx/doc/install.html) for further details):
 
     ```matlab
     cvx_setup
@@ -52,7 +52,7 @@ This repository contains the source code and will serve as documentation for the
 
 ## Usage
 
-First, run the [`Initialize.m`](./Initialize.m) script to resolve paths of the all files and import them for utilization.
+First, run the [`Initialize.m`](./Initialize.m) script to resolve the paths of all files and import them for utilization.
 
 ```matlab
 >>> Initialize
